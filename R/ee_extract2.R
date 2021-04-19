@@ -9,7 +9,7 @@ ee_extract_clean <- function(x) {
              names_transform = list(date = lubridate::as_date),
              names_pattern = "X(.*\\d{2})_(.*)",
              cols = starts_with('X')) %>%
-    pivot_wider(names_from = "band")
+    pivot_wider(names_from = "band") %>% data.table()
 }
 
 #' ee_extract2
@@ -17,7 +17,16 @@ ee_extract_clean <- function(x) {
 #' @import rgee
 #' @inheritParams rgee::ee_extract
 #' @export
-ee_extract2 <- function(x, y, fun = ee$Reducer$mean(), scale = NULL, ...) {
+ee_extract2 <- function(x, y, fun = ee$Reducer$mean(), scale = NULL, 
+    prefix = "", lazy = FALSE, ...) 
+{
+    id = x$limit(1)$get("system:id") %>% getInfo() %>% gsub("/", "_", .)
+    outfile = paste0(prefix, id, ".csv")
     if (is.null(scale)) scale = ee_get_proj(x)$scale
-    ee_extract(x, y, fun, scale, ...) %>% ee_extract_clean()
+
+    df = .ee_extract(x, y, fun, scale, dsn = outfile, lazy = lazy, ...) 
+    if (!lazy && !is.null(outfile)) {
+        ee_extract_clean(df) %>% fwrite(outfile)
+        return(df)
+    } else invisible()
 }

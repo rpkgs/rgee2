@@ -2,9 +2,9 @@
 #'
 #' @param st data.table with the columns at least of `site`, `lon`, and `lat`.
 #' @param scale in the unit of `m`
-#' @param half_win half window of the buffer (in grids). window size equals to 
+#' @param half_win half window of the buffer (in grids). window size equals to
 #' `2*halfwin + 1`.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' st = st_212[, .(site, lon, lat, IGBP)]
@@ -30,7 +30,18 @@ st_point_buffer <- function(sp, scale = 500, half_win = 1){
         d$lat %<>% add(delta_y)
         d
     }) %>% melt_list("group")
-    
+
     df %>% df2sp() %>%
         st_as_sf()
+}
+
+#' colors to hex
+#' 
+#' @param cname color names
+#' @examples
+#' col2hex("grey60")
+#' @export
+col2hex <- function (cname) {
+    colMat <- col2rgb(cname)/255
+    rgb(red = colMat[1, ], green = colMat[2, ], blue = colMat[3,])
 }

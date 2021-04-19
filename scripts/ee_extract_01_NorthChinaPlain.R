@@ -20,7 +20,7 @@ sp2 = st_point_buffer(sp, scale = scale)
 
 {
     df = ee_extract2(imgcol$limit(1e3), sp2, scale = scale, via = "drive") %>% data.table()
-    save(df_tmp, file = "data-raw/phenofit_NorthChinaPlain_test-(2015-2021)_3by3.rda")
+    save(df, file = "data-raw/phenofit_NorthChinaPlain_test-(2015-2021)_3by3.rda")
 }
 
 {

@@ -4,7 +4,15 @@
 \alias{ee_extract2}
 \title{ee_extract2}
 \usage{
-ee_extract2(x, y, fun = ee$Reducer$mean(), scale = NULL, ...)
+ee_extract2(
+  x,
+  y,
+  fun = ee$Reducer$mean(),
+  scale = NULL,
+  prefix = "",
+  lazy = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{ee$Image.}
@@ -17,6 +25,10 @@ See details.}
 
 \item{scale}{A nominal scale in meters of the Image projection to work in.
 By default 1000.}
+
+\item{lazy}{Logical. If TRUE, a \code{\link[future:sequential]{
+future::sequential}} object is created to evaluate the task in the future.
+Ignore if \code{via} is set as "getInfo". See details.}
 
 \item{...}{ee$Image$reduceRegions additional parameters. See
 \code{ee_help(ee$Image$reduceRegions)} for more details.}

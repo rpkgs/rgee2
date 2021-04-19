@@ -1,6 +1,8 @@
+#' @export
 as_date_img <- function(x, prop = "system:time_start") {
       ee$Date(x$get(prop))$format("YYYY-MM-dd")
   }
+#' @export
 as_date_millis <- function(x) ee$Date(x)$format("YYYY-MM-dd")
 
 #' ee_systemtime

@@ -28,11 +28,11 @@ ee_gif <- function(imgcol, vis = NULL, mask = NULL, reigon = NULL, dimensions = 
     if (is.null(region)) region = mask$geometry()$bounds()
 
     gifParams <- listk(region, dimensions, crs, framesPerSecond)
-    animation <- ee_utils_gif_creator(imgcol_vis, gifParams)
+    animation <- .ee_utils_gif_creator(imgcol_vis, gifParams)
     animation
 }
 
-ee_utils_gif_creator <- function (ic, parameters, outfile = "tmp.gif", quiet = FALSE, ...) {
+.ee_utils_gif_creator <- function (ic, parameters, outfile = "tmp.gif", quiet = FALSE, ...) {
     rgee:::ee_check_packages("ee_utils_gif_creator", "magick")
     if (!quiet) {
         message("1. Creating gif ... please wait ....")
