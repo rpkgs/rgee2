@@ -65,7 +65,7 @@
     }
 
     if (via == "drive") {
-        table_task <- .ee_init_task_drive_fc(x_fc = table, dsn = dsn,
+        table_task <- rgee2:::.ee_init_task_drive_fc(x_fc = table, dsn = dsn,
             container = container, table_id = table_id, ee_user = ee_user,
             selectors = NULL, timePrefix = FALSE, quiet = quiet)
 
@@ -86,7 +86,7 @@
             prev_plan <- future::plan(future::sequential, .skip = TRUE)
             on.exit(future::plan(prev_plan, .skip = TRUE), add = TRUE)
             future::future({
-                ee_extract_to_lazy_exp_gcs(table_task, dsn, quiet,
+                rgee:::ee_extract_to_lazy_exp_gcs(table_task, dsn, quiet,
                   sf, sf_y)
             }, lazy = TRUE)
         }
@@ -131,8 +131,8 @@
 
     # Are GD credentials loaded?
     if (is.na(ee_user$drive_cre)) {
-        drive_credential <- ee_create_credentials_drive(ee_user$email)
-        ee_save_credential(pdrive = drive_credential)
+        drive_credential <- rgee:::ee_create_credentials_drive(ee_user$email)
+        rgee:::ee_save_credential(pdrive = drive_credential)
         # ee_Initialize(email = ee_user$email, drive = TRUE)
         message(
             "\nNOTE: Google Drive credentials were not loaded.",
@@ -142,7 +142,7 @@
     }
 
     # The file format specified in dsn exist and it is suppoted by GEE?
-    table_format <- ee_get_table_format(dsn)
+    table_format <- rgee:::ee_get_table_format(dsn)
     if (is.na(table_format)) {
         stop(
             'sf_as_ee(..., via = \"drive\"), only support the ',
@@ -174,5 +174,5 @@
     table_task
 }
 
-environment(.ee_init_task_drive_fc) <- environment(rgee::ee_extract)
 environment(.ee_extract) <- environment(rgee::ee_extract)
+# environment(.ee_init_task_drive_fc) <- environment(rgee::ee_extract)

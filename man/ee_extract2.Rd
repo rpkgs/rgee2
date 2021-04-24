@@ -5,7 +5,7 @@
 \title{ee_extract2}
 \usage{
 ee_extract2(
-  x,
+  imgcol,
   y,
   fun = ee$Reducer$mean(),
   scale = NULL,
@@ -15,8 +15,6 @@ ee_extract2(
 )
 }
 \arguments{
-\item{x}{ee$Image.}
-
 \item{y}{ee$Geometry$*, ee$Feature, ee$FeatureCollection, sfc or sf objects.}
 
 \item{fun}{ee$Reducer object. Function to summarize the values. The function
