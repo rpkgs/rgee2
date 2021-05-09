@@ -3,7 +3,10 @@ as_date_img <- function(x, prop = "system:time_start") {
       ee$Date(x$get(prop))$format("YYYY-MM-dd")
   }
 #' @export
-as_date_millis <- function(x) ee$Date(x)$format("YYYY-MM-dd")
+as_date_millis <- function(x) {
+    ee$Date(x)$format("YYYY-MM-dd HH:mm:ss")
+    # ee$Date(x)$format("YYYY-MM-dd")
+}
 
 #' ee_systemtime
 #' 
@@ -14,7 +17,7 @@ as_date_millis <- function(x) ee$Date(x)$format("YYYY-MM-dd")
 ee_systemtime <- function(x, prop = 'system:time_start') {
     class <- class(x)
     if ("ee.image.Image" %in% class) x = ee$ImageCollection(x)
-    x$aggregate_array(prop)$map(ee_utils_pyfunc(as_date_millis))
+    x$aggregate_array(prop)$map(ee_utils_pyfunc(as_date_millis)) %>% getInfo()
 }
 
 #' @rdname ee_systemtime

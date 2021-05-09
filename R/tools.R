@@ -8,9 +8,12 @@ ee_getInfo <- function(x) {
     x$getInfo()
 }
 
+ee_num2str <- function(x) {
+    x$format("%d")
+}
+
 #' @export
 getInfo = ee_getInfo
-
 
 #' @export
 ee_aggregate_array <- function(col, prop = "system:time_start") {

@@ -34,14 +34,3 @@ st_point_buffer <- function(sp, scale = 500, half_win = 1){
     df %>% df2sp() %>%
         st_as_sf()
 }
-
-#' colors to hex
-#' 
-#' @param cname color names
-#' @examples
-#' col2hex("grey60")
-#' @export
-col2hex <- function (cname) {
-    colMat <- col2rgb(cname)/255
-    rgb(red = colMat[1, ], green = colMat[2, ], blue = colMat[3,])
-}
