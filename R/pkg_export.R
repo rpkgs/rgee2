@@ -47,20 +47,29 @@ export_Img <- function(img, task, options) {
     do.call(ee_image_to_drive, params)$start()
 }
 
-export_ImgCol <- function(imgcol, prefix, options) {
+export_ImgCol <- function(imgcol, prefix, options, props = NULL) {
     filterProp = if (is.null(options$filterProp)) "system:time_start" else options$filterProp
-    props = ee_aggregate_array(imgcol, filterProp)
+    if (is.null(props)) {
+        if (filterProp == "system:time_start") {
+            props <- ee_systemtime(imgcol, filterProp)
+        } else {
+            props <- ee_aggregate_array(imgcol, filterProp)
+        }
+    }
 
     for (i in seq_along(props)) {
         prop = props[i]
         task = paste0(prefix, prop)
-        browser()
-        img = imgcol$filterMetadata(filterProp, "equals", prop)$first()
+
+        if (filterProp == "system:time_start") {
+            img = imgcol$filterDate(prop)$first()
+        } else {
+            img = imgcol$filterMetadata(filterProp, "equals", prop)$first()
+        }
+        # browser()
         export_Img(img, task, options)
     }
 }
-
-
 
 #' @export
 map_col <- function(col, fun, ...) {

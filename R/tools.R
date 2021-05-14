@@ -16,6 +16,9 @@ ee_num2str <- function(x) {
 getInfo = ee_getInfo
 
 #' @export
+getInfo2 = . %>% ee_getInfo() %>% str()
+
+#' @export
 ee_aggregate_array <- function(col, prop = "system:time_start") {
   props = col$aggregate_array(prop) %>% 
     ee$List$getInfo()

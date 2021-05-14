@@ -33,6 +33,9 @@ ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MOD13A2,
 ee_extract2( ee$ImageCollection$Dataset$MODIS_006_MOD09GA,
             sp2, via = "drive", lazy = TRUE, scale = scale,
             prefix = "st212_SR_MOD09GA_2000-2020_")
+ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MCD12Q1,
+            sp2, via = "drive", lazy = TRUE,
+            prefix = "st212_2000-2020_")
 
 ## ET and GPP
 ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MOD16A2,
@@ -49,7 +52,8 @@ ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MOD11A2,
             sp2_1km, via = "drive", lazy = TRUE,
             prefix = "st212_Tland_2000-2020_")
 
-
+drive_csv_clean(file, sp2_1km)
+drive_csv_clean(file, sp2)
 
 
 files <- dir("data-raw/st212/raw", full.names = TRUE)
@@ -58,3 +62,8 @@ for (infile in files) {
     print(infile)
     drive_csv_clean(infile, sp2)
 }
+
+
+file = "C:/Users/kongdd/Google 云端硬盘/rgee_backup/st212_2000-2020_ith06_MODIS_006_MOD15A2H.csv"
+file = "C:/Users/kongdd/Google 云端硬盘/rgee_backup/st212_2000-2020_MODIS_006_MCD12Q1.csv"
+

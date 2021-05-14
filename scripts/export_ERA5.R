@@ -3,10 +3,11 @@ library(rgee)
 ee_Initialize(drive = T)
 
 {
-    imgcol = ee$ImageCollection("ECMWF/ERA5_LAND/MONTHLY")
-    imgcol = imgcol$map(add_TimeProp)
+    imgcol = ee$ImageCollection("ECMWF/ERA5_LAND/MONTHLY")$
+        select(c("evaporation_from_vegetation_transpiration"))$
+        map(add_TimeProp)
 
-    img = imgcol$first()$select(c("evaporation_from_vegetation_transpiration"))
+    img = imgcol$first()
     # img_jrc <- ee$Image("JRC/GSW1_2/GlobalSurfaceWater")
     # img_urban <- ee$Image("Tsinghua/FROM-GLC/GAIA/v10")
 
@@ -26,9 +27,14 @@ ee_Initialize(drive = T)
 }
 
 imgcol_year = ee_aggregate(imgcol, "year", "sum")
-imgcol_year = imgcol_year.filterDate('1981-01-01', '2020-12-31');
+imgcol_year = imgcol_year$filterDate('1980-01-01', '2020-12-31');
 
-export_ImgCol(imgcol_year, "ERA5land_Ec_", options)
+library(lubridate)
+props = make_date(1982:2020, 1, 1) %>% format()
+system.time({
+    export_ImgCol(imgcol_year, "ERA5land_Ec_", options, props)
+})
+
 
 Map$addLayer(imgcol_year$first())
 x = ee$ImageCollection$fromImages(c(img, img))
