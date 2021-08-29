@@ -7,8 +7,10 @@ ee_extract_clean <- function(x) {
     if (is.character(x)) x = fread(x)
     pivot_longer(x,
              names_to = c("date", "band"),
-             names_transform = list(date = lubridate::as_date),
+            #  names_transform = list(date = lubridate::as_date),
+            #  names_transform = list(date = function(x) as.Date(paste0(x, "01"), format = "%Y%m%d")),
              names_pattern = "(\\d{4}.*\\d{2})_(.*)",
+            #  names_pattern = "(\\d{4}.*\\d{2})_(.*)",
              cols = matches("\\d{4}")) %>%
     pivot_wider(names_from = "band") %>% data.table()
 }

@@ -14,7 +14,6 @@ scale = proj$scale # scale should lte prj.scale
 sp2 = st_point_buffer(sp, scale = scale, half_win = 1)
 
 # save(df, file = "data-raw/phenofit_NorthChinaPlain_test-(2015-2021)_3by3.rda")
-
 ## ALL the scale is 500m
 ## 1. vegetation index
 ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MOD15A2H,
@@ -63,7 +62,5 @@ for (infile in files) {
     drive_csv_clean(infile, sp2)
 }
 
-
 file = "C:/Users/kongdd/Google 云端硬盘/rgee_backup/st212_2000-2020_ith06_MODIS_006_MOD15A2H.csv"
 file = "C:/Users/kongdd/Google 云端硬盘/rgee_backup/st212_2000-2020_MODIS_006_MCD12Q1.csv"
-
