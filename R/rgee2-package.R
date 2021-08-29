@@ -1,3 +1,6 @@
+#' @importFrom grDevices col2rgb rgb
+#' @importFrom stats setNames
+#' @importFrom utils download.file str
 #' @keywords internal
 "_PACKAGE"
 

@@ -4,7 +4,7 @@
 \name{rgee2-package}
 \alias{rgee2}
 \alias{rgee2-package}
-\title{rgee2: What the Package Does (One Line, Title Case)}
+\title{rgee2: Extra functions for R Google Earth Engine}
 \description{
 Google Earth Engine Extensions in R.
 }

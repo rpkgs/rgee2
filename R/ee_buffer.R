@@ -17,14 +17,14 @@ st_point_buffer <- function(sp, scale = 500, half_win = 1){
     cellsize = scale/500 * 1/240
 
     win = half_win*2 + 1
-    lon      = c(-half_win, 0, -half_win) %>% rep(win) %>% multiply_by(cellsize)
-    lat      = c(-half_win, 0, -half_win) %>% rep(each = win) %>% multiply_by(cellsize)
-    adj_mat  = cbind(lon, lat)
-
+    lon = seq(-half_win:half_win)*cellsize
+    lat = seq(-half_win:half_win)*cellsize    
+    adj_mat  = expand.grid(lon = lon, lat = lat)
+    
     grps = 1:nrow(adj_mat) %>% set_names(., .)
     df = lapply(grps, function(i) {
         d = st
-        delta_x = adj_mat[i, 1]
+        delta_x = adj_mat[i, 1] # lon
         delta_y = adj_mat[i, 2]
         d$lon %<>% add(delta_x)
         d$lat %<>% add(delta_y)

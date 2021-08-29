@@ -6,3 +6,5 @@
 ^examples$
 ^python$
 ^scripts$
+^\.vscode$
+^\.github$

@@ -35,6 +35,7 @@ ee_extract2 <- function(imgcol, y, fun = ee$Reducer$mean(), scale = NULL,
 }
 
 #' @import data.table
+#' @export
 drive_csv_clean <- function(infile, sp2, outfile = NULL, overwrite = FALSE) {
     if (is.null(outfile))
         outfile = paste0(dirname(dirname(infile)), "/", basename(infile))
