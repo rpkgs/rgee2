@@ -29,26 +29,46 @@ ee_aggregate <- function(imgcol, prop, reducerList = "mean", bandList = 0) {
     ee$ImageCollection$fromImages(imgcol_new)
 }
 
-aggregate_process <- function(imgcol, prop, prop_val, reducerList, bandList) {
-    nreducer = length(reducerList)
-    imgcol = imgcol$filterMetadata(prop, "equals", prop_val)$sort("system:time_start")
-
-    first = imgcol$first();
-    # last  = pkg_trend$imgcol_last(imgcol);
-    ans = ee$Image();
-    # if (!delta) {
-    for (i in 1:nreducer) {
+aggregate_process <- function(imgcol, bandList, reducerList){
+    first = ee$Image(imgcol$first());
+    # nreducer = reducerList$length;
+    # print(bandList, reducerList, nreducer);
+    n = length(reducerList)
+    ans = NULL;
+    for (i in 1:n) {
         bands = bandList[i];
         reducer = reducerList[i];
         img_new = imgcol$select(bands)$reduce(reducer);
-        ans = ans$addBands(img_new);
+        if (i == 1) {
+            ans = img_new
+        } else {
+            ans = ans$addBands(img_new);
+        }
     }
-    # } else {
-    #     ans = last$subtract(first);
-    # }
-    ee_copyProperties(ans, first)
-    # ans$copyProperties(first, first$propertyNames())
+    ans
+    # return(ee$Image(pkg_agg$copyProperties(ee$Image(ans), first)))
 }
+
+# aggregate_process <- function(imgcol, prop, prop_val, reducerList, bandList) {
+#     nreducer = length(reducerList)
+#     imgcol = imgcol$filterMetadata(prop, "equals", prop_val)$sort("system:time_start")
+
+#     first = imgcol$first();
+#     # last  = pkg_trend$imgcol_last(imgcol);
+#     ans = ee$Image();
+#     # if (!delta) {
+#     for (i in 1:nreducer) {
+#         bands = bandList[i];
+#         reducer = reducerList[i];
+#         img_new = imgcol$select(bands)$reduce(reducer);
+#         ans = ans$addBands(img_new);
+#     }
+#     # } else {
+#     #     ans = last$subtract(first);
+#     # }
+#     ee_copyProperties(ans, first)
+#     # ans$copyProperties(first, first$propertyNames())
+# }
 
 aggregate_process2 <- function(imgcol, prop, prop_val, reducerList, bandList) {
     nreducer = length(reducerList)

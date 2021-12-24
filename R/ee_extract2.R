@@ -21,10 +21,15 @@ ee_extract_clean <- function(x) {
 #' @inheritParams rgee::ee_extract
 #' @export
 ee_extract2 <- function(imgcol, y, fun = ee$Reducer$mean(), scale = NULL, 
-    prefix = "", lazy = FALSE, ...) 
+    prefix = "", outfile = NULL, 
+    lazy = FALSE, ...) 
 {
-    id = imgcol$limit(1)$get("system:id") %>% getInfo() %>% gsub("/", "_", .)
-    outfile = paste0(prefix, id, ".csv")
+    imgcol %<>% check_imgcol()
+
+    if (is.null(outfile)) {
+        id = imgcol$limit(1)$get("system:id") %>% getInfo() %>% gsub("/", "_", .)
+        outfile = paste0(prefix, id, ".csv")
+    }
     if (is.null(scale)) scale = ee_get_proj(imgcol)$scale
 
     df = .ee_extract(imgcol, y, fun, scale, dsn = outfile, lazy = lazy, ...) 

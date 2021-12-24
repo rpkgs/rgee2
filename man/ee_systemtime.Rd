@@ -3,14 +3,14 @@
 \name{ee_systemtime}
 \alias{ee_systemtime}
 \alias{ee_timeStart}
-\alias{ee_timesEnd}
+\alias{ee_timeEnd}
 \title{ee_systemtime}
 \usage{
 ee_systemtime(x, prop = "system:time_start")
 
 ee_timeStart(x)
 
-ee_timesEnd(x)
+ee_timeEnd(x)
 }
 \arguments{
 \item{prop}{"system:time_start" or "system:time_end"}

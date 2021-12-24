@@ -1,7 +1,7 @@
 #' @export
 as_date_img <- function(x, prop = "system:time_start") {
-      ee$Date(x$get(prop))$format("YYYY-MM-dd")
-  }
+    ee$Date(x$get(prop))$format("YYYY-MM-dd")
+}
 
 fmt = "YYYY-MM-dd HH"
 #' @export
@@ -29,7 +29,7 @@ ee_timeStart <- function(x) ee_systemtime(x, "system:time_start")
 
 #' @rdname ee_systemtime
 #' @export
-ee_timesEnd <- function(x) ee_systemtime(x, "system:time_end")
+ee_timeEnd <- function(x) ee_systemtime(x, "system:time_end")
 
 #' @export
 get_date_dn <- function(date_begin = "2000-02-26", date_end = "2020-12-31", dn = 16){
