@@ -3,7 +3,7 @@ library(rgee)
 library(sf)
 # ee_Initialize()
 imgcol = ee$ImageCollection$Dataset$MODIS_006_MOD13A2
-dates = imgcol %>% ee_timeStart() %>% getInfo()
+dates = imgcol %>% ee_timestart() %>% getInfo()
 
 poly <- read_sf("/mnt/o/ChinaBasins/dem_raw/NorthChina/bou2_NorthChina_4p.shp")[1:6, ]
 mask <- sf_as_ee(poly)

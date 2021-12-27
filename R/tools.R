@@ -83,25 +83,22 @@ image_size <- function(x) {
 #' @import crayon
 #' @export
 print.ee.image.Image <- function(x, ...) {
-    ok(bold("ee$Image:"))
-
+    # ok(bold("ee$Image:"))
     bands = x$bandNames()$getInfo()
     bands_str = paste(bands, collapse = ', ')
-    fprintf("%s: %s\n", bold(underline("bandNames")), (bands_str))
+    fun = . %>% { bold(green(underline(.))) }
 
-    fprintf("%s: \n", bold(underline("Properties")))
+    fprintf("%s: \n%s\n", fun("bandNames"), (bands_str))
+    fprintf("%s: \n", fun("Properties"))
     ee_properties(x, verbose = TRUE)
 }
 
 #' @export
 print.ee.imagecollection.ImageCollection <- function(x, ...) {
     n = x$size()$getInfo()
-    fprintf("[n = %02d]\n", n)
-    x = x$first()
+    fun = . %>% { bold(green(underline(.))) }
+    fprintf("%s, n = %02d\n", fun("[ee.ImageCollection]"), n)
 
-    fprintf("BandNames:\n")
-    print(x$bandNames()$getInfo())
-
-    fprintf("Properties:\n")
-    print(ee_properties(x, verbose = TRUE))
+    img = x$first()
+    print.ee.image.Image(img)
 }

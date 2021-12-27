@@ -10,6 +10,7 @@ ee_extract2(
   fun = ee$Reducer$mean(),
   scale = NULL,
   prefix = "",
+  outfile = NULL,
   lazy = FALSE,
   ...
 )

@@ -25,11 +25,11 @@ ee_systemtime <- function(x, prop = 'system:time_start') {
 
 #' @rdname ee_systemtime
 #' @export
-ee_timeStart <- function(x) ee_systemtime(x, "system:time_start")
+ee_timestart <- function(x) ee_systemtime(x, "system:time_start")
 
 #' @rdname ee_systemtime
 #' @export
-ee_timeEnd <- function(x) ee_systemtime(x, "system:time_end")
+ee_timeend <- function(x) ee_systemtime(x, "system:time_end")
 
 #' @export
 get_date_dn <- function(date_begin = "2000-02-26", date_end = "2020-12-31", dn = 16){

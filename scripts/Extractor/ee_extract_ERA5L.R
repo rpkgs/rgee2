@@ -29,7 +29,7 @@ temp = foreach(year = years, i = icount()) %do% {
         map(tidy_ERA5)$
         select(bands)
     dates_daily = seq(make_date(year), make_date(year, 12, 31), by = "day") %>% format()
-    # dates = ee_timeStart(col)
+    # dates = ee_timestart(col)
     # dates_daily = substr(dates, 1, 10) %>% unique()
 
     res <- map(dates_daily, ~ aggregate_ERA5_daily(.x, col, bands))
@@ -41,6 +41,15 @@ temp = foreach(year = years, i = icount()) %do% {
         outfile = glue("PET_forcings_{year}.csv")
     )
 }
+
+files <- dir("H:/global_WB/ChinaPET/ERA5L_raw", full.names = TRUE)
+overwrite = FALSE
+for (infile in files) {
+    print(infile)
+    drive_csv_clean(infile, sp)
+}
+
+files <- dir("H:/global_WB/ChinaPET", "*.csv", full.names = TRUE)
 
 # res = ee$List(dates_daily)$map(ee_utils_pyfunc(function(date_begin){
 #     ans = aggregate_ERA5_daily(date_begin, col, bands)

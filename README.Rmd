@@ -1,0 +1,67 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# rgee2
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of rgee2 is to ...
+
+## Installation
+
+You can install the development version of rgee2 from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("rpkgs/rgee2")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(rgee2)
+library(rgee)
+ee_Initialize(drive = TRUE)
+```
+
+### Illustration by EAR5L data
+
+```{r cars}
+# bands = c('T', "Tdew", 'Pa', 'Rn', 'ET', 'U2')
+year = 2020
+month = 1
+col <- ee$ImageCollection("ECMWF/ERA5_LAND/HOURLY")$
+    filter(ee$filter$Filter$calendarRange(year, year, "year"))$
+    filter(ee$filter$Filter$calendarRange(month, month, "month"))$
+    select(0:4)
+# print(col)
+
+img = col$first()
+print(img)
+```
+
+```{r, eval = FALSE}
+ee_timestart(col) %>% head()
+ee_timeend(col) %>% head()
+
+ee_bandNames(col)
+ee_bandNames(img)
+
+ee_properties(col)
+ee_aggregate_array(col, prop = "system:index")
+```

@@ -2,15 +2,15 @@
 % Please edit documentation in R/ee_date.R
 \name{ee_systemtime}
 \alias{ee_systemtime}
-\alias{ee_timeStart}
-\alias{ee_timeEnd}
+\alias{ee_timestart}
+\alias{ee_timeend}
 \title{ee_systemtime}
 \usage{
 ee_systemtime(x, prop = "system:time_start")
 
-ee_timeStart(x)
+ee_timestart(x)
 
-ee_timeEnd(x)
+ee_timeend(x)
 }
 \arguments{
 \item{prop}{"system:time_start" or "system:time_end"}
