@@ -39,6 +39,13 @@ ee_extract2 <- function(imgcol, y, fun = ee$Reducer$mean(), scale = NULL,
     } else invisible()
 }
 
+ee_extract2_chunk <- function(imgcol, y, fun = ee$Reducer$mean(), scale = NULL, 
+    prefix = "", outfile = NULL, 
+    lazy = FALSE, ...) {
+    
+}
+
+
 #' @import data.table
 #' @export
 drive_csv_clean <- function(infile, sp2, outfile = NULL, overwrite = FALSE) {

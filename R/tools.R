@@ -42,6 +42,17 @@ ee_imageClip <- function(x, mask = NULL) {
     x
 }
 
+ee_first <- function(col) {
+    col$first()
+}
+
+ee_last <- function(col) {
+    n = col$size()
+    list = col$toList(n)
+    list$slice(n$substract(1), n)
+    col$first()
+}
+
 #' @export
 ee_bandNames <- function(x) {
     x %<>% check_imgcol()

@@ -11,7 +11,8 @@ imgcol = ee$ImageCollection$Dataset$MODIS_006_MOD15A2H
 proj = ee_get_proj(imgcol)
 scale = proj$scale # scale should lte prj.scale
 # scale = 463.3127
-sp2 = st_point_buffer(sp, scale = scale, half_win = 1)
+sp2 = st_point_buffer(sp, scale = scale, half_win = 1) # -half_win: half_win
+sp_5 = st_point_buffer(sp, scale = scale, half_win = 2)
 
 # save(df, file = "data-raw/phenofit_NorthChinaPlain_test-(2015-2021)_3by3.rda")
 ## ALL the scale is 500m
@@ -36,6 +37,14 @@ ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MCD12Q1,
             sp2, via = "drive", lazy = TRUE,
             prefix = "st212_2000-2020_")
 
+ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MCD43A3$select('Albedo_WSA_shortwave'),
+            sp2, via = "drive", lazy = TRUE,
+            prefix = "st212_2000-2020_")
+
+ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MCD12Q1,
+            sp_5, via = "drive", lazy = TRUE,
+            prefix = "st212_win5_2000-2020_")
+
 ## ET and GPP
 ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MOD16A2,
             sp2, via = "drive", lazy = TRUE,
@@ -45,6 +54,7 @@ ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MOD17A2H,
             prefix = "st212_GPP-mod_2000-2020_")
 
 ## 1km scale dataset
+# Emissivity
 scale_1km = ee_get_proj(ee$ImageCollection$Dataset$MODIS_006_MOD11A2)$scale
 sp2_1km = st_point_buffer(sp, scale = scale_1km, half_win = 1)
 ee_extract2(ee$ImageCollection$Dataset$MODIS_006_MOD11A2,

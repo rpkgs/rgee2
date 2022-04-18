@@ -41,11 +41,15 @@ aggregate_ERA5_daily <- function(date_begin, col, bands) {
     date_end = date_begin$advance(1, "day")
     imgcol = col$filterDate(date_begin, date_end)
 
+    ind = which(bands != "T") - 1
     img_first = imgcol$first() #%>% ee_properties()
-    img_Tair = aggregate_process(imgcol$select(c("T")), c(0, 0, 0), c("max", "min", "mean"))$
-        rename(c("Tmax", "Tmin", "Tavg"))
-    img_day = imgcol$select(ee$List$sequence(1, length(bands) - 1))$mean()
-    img = img_day$addBands(img_Tair)
+    img = imgcol$select(ind)$mean()
+    
+    if ("T" %in% bands) {
+        img_Tair = aggregate_process(imgcol$select(c("T")), c(0, 0, 0), c("max", "min", "mean"))$
+            rename(c("Tmax", "Tmin", "Tavg"))
+        img = img$addBands(img_Tair)
+    }
     img = ee$Image(img$copyProperties(img_first, img_first$propertyNames()))
     img    
 }
