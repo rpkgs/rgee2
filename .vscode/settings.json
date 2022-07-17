@@ -1,0 +1,9 @@
+{
+  "r.rterm.windows": "c:/ProgramData/Miniconda3/envs/gee/Scripts/radian.exe",
+  "terminal.integrated.env.windows": {
+    // "PATH": "${env:PATH}",
+    "http_proxy":"http://127.0.0.1:1081",
+    "https_proxy":"http://127.0.0.1:1081",
+  },
+  "editor.tabSize": 2
+}

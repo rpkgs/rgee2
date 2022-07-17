@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 
-*.json
+# *.json
 *.gif
 *.tif
 *.png
