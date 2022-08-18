@@ -44,7 +44,7 @@ Sys.setenv(http_proxy="http://127.0.0.1:1081")
 - ### 1. RStudio uses `R.exe`
 
 ```bash
-#subl  C:/Program Files/R/R-4.2.0/etc/Rcmd_environ
+#subl "C:/Program Files/R/R-4.2.1/etc/Rcmd_environ"
 http_proxy="http://127.0.0.1:1081"
 https_proxy="http://127.0.0.1:1081"
 ```
