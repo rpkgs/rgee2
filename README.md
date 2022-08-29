@@ -21,7 +21,17 @@ remotes::install_github("rpkgs/rgee2")
 
 ## 网络代理
 
-- **安装gcloud**
+- **1. conda create env**
+```powershell
+conda create --name qgis --channel conda-forge mamba
+mamba install geemap -c conda-forge
+```
+
+- **2. 安装gcloud**
+环境变量 -> 用户 -> 新建
+  + `https_proxy`: "http://127.0.0.1:1081"
+  + `https_proxy`: "http://127.0.0.1:1081"
+
 ```R
 # gcloud info --run-diagnostics
 # C:/Users/kong/AppData/Roaming/gcloud/configurations/config_default
