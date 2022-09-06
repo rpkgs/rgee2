@@ -40,3 +40,9 @@ get_date_dn <- function(date_begin = "2000-02-26", date_end = "2020-12-31", dn =
     }) %>% do.call(c, .)
     dates[dates >= date_begin & dates <= date_end]
 }
+
+# #' @rdname ee_tools
+# #' @export
+# get_time <- function(img) {
+#   ee$Date(img$get("system:time_start"))$format("yyyy-MM-dd")
+# }
