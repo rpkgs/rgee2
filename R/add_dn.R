@@ -1,4 +1,5 @@
 # ee_utils_pyfunc
+#' @export
 col_add_dn_date <- function(col, include.year = TRUE, chunksize = 8) {
   fun <- . %>% add_dn_date(., NULL, include.year, chunksize)
   col$map(ee_utils_pyfunc(fun))

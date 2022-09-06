@@ -5,6 +5,8 @@
 \alias{reexports}
 \alias{glue}
 \alias{ee_Initialize}
+\alias{ee}
+\alias{Map}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -14,6 +16,6 @@ below to see their documentation.
 \describe{
   \item{glue}{\code{\link[glue]{glue}}}
 
-  \item{rgee}{\code{\link[rgee]{ee_Initialize}}}
+  \item{rgee}{\code{\link[rgee]{ee}}, \code{\link[rgee]{ee_Initialize}}, \code{\link[rgee]{Map}}}
 }}
 
