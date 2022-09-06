@@ -12,3 +12,5 @@
 data-raw
 *.rda
 */temp
+
+examples/

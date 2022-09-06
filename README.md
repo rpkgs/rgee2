@@ -21,6 +21,8 @@ remotes::install_github("rpkgs/rgee2")
 
 ## 网络代理
 
+clash需要开启系统代理(system)，否则Map$addLayer无法显示图像。
+
 - **1. conda create env**
 ```powershell
 conda create --name qgis --channel conda-forge mamba

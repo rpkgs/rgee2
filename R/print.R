@@ -28,3 +28,35 @@ print.ee.imagecollection.ImageCollection <- function(x, ...) {
   img <- x$first()
   print.ee.image.Image(img)
 }
+
+#' @export
+print.ee.ee_date.Date <- function(x, ...) {
+  fprintf(
+    "%s: %s\n", print_title("[ee.Date]"),
+    str_date(x)
+  )
+}
+
+#' @export
+print.ee.ee_number.Number <- function(x, ...) {
+  fprintf(
+    "%s: %s\n", print_title("[ee.Number]"),
+    getInfo(x)
+  )
+}
+
+#' @export
+print.ee.ee_string.String <- function(x, ...) {
+  fprintf(
+    "%s: '%s'\n", print_title("[ee.String]"),
+    getInfo(x)
+  )
+}
+
+#' @export
+print.ee.ee_list.List <- function(x, ...) {
+  fprintf(
+    "%s: [%s]\n", print_title("[ee.List]"),
+    getInfo(x) %>% paste(collapse = ", ")
+  )
+}
