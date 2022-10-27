@@ -1,0 +1,31 @@
+---
+title: "hello"
+author: "Dongdong"
+date: "`r Sys.Date()`"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(leaflet)
+# library(rgee)
+# rgee::ee_Initialize()
+```
+
+```{r, echo=FALSE}
+ui = fluidPage(
+  selectInput("region", "Region:",
+              choices = colnames(WorldPhones)),
+  plotOutput("phonePlot")
+)
+
+server = function(input, output) {
+  output$phonePlot = renderPlot({
+    barplot(WorldPhones[,input$region]*1000,
+            ylab = "Number of Telephones", xlab = "Year")
+  })
+}
+shinyApp(ui, server, options = list(height = 500))
+```

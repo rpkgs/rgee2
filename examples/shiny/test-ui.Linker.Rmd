@@ -1,0 +1,54 @@
+---
+title: "hello"
+author: "Dongdong"
+date: '`r Sys.Date()`'
+output: 
+  html_document: 
+    number_sections: true
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rgee)
+library(shiny)
+library(leaflet)
+
+ee_Initialize()
+```
+
+```{r manipulateWidget, echo=FALSE}
+library(leaflet.minicharts)
+library(manipulateWidget)
+library(leafsync)
+
+map_sync <- function(m1, m2, type = c("widget", "leafsync"), ...) {
+  FUN = switch(type,
+    "widget" = manipulateWidget::combineWidgets, 
+    "leafsync" = leafsync::sync
+  )
+  if (type == "widget") {
+    m1 = m1 %>% syncWith("one")
+    m2 = m2 %>% syncWith("one")
+  }
+  m <- FUN(m1, m2, ...)
+  m
+}
+
+m1 <- Map$addLayer(eeObject = ee$Image("CGIAR/SRTM90_V4")) 
+m2 <- Map$addLayer(
+  eeObject = ee$Image("CGIAR/SRTM90_V4"),
+  visParams = list(min=0,max=3000)
+)
+```
+
+## Figure 1. manipulateWidget map linker
+```{r}
+map_sync(m1, m2, "widget", nrow = 1, width = 950, height = 400)
+```
+
+## Figure 2. leafsync map linker
+```{r}
+map_sync(m1, m2, "leafsync")
+```

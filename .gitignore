@@ -13,4 +13,5 @@ data-raw
 *.rda
 */temp
 
-examples/
+*.html
+# examples/

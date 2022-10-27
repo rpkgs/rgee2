@@ -1,0 +1,223 @@
+---
+title: "Vegetation response to 2022 drought in China"
+author: "Dongdong Kong, CUG, China"
+date: '`r Sys.Date()`'
+output: 
+  html_document: 
+    number_sections: true
+runtime: shiny
+---
+
+# 介绍
+
+农业干旱实时监测。
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(shiny)
+library(leaflet)
+library(rgee)
+library(rgee2)
+library(rcolors)
+
+library(leaflet.minicharts)
+library(manipulateWidget)
+library(leafsync)
+
+# library(leaflet.extras2) # backends
+
+str_num <- function(x, digits = 3) {
+  fmt = sprintf("%%.%df", digits = 3)
+  sprintf(fmt, x)
+}
+cal_p <- function(p, digits = 3) str_num(pnorm(p), digits)
+cal_T <- function(p, digits = 2) str_num(1 / pnorm(p), digits)
+```
+
+# 数据与方法
+
+## 数据
+
+-   `MOD13A1.006`: <https://lpdaac.usgs.gov/products/mod13a1v006/>
+
+> `MOD13A1.061`在2022年两个16-day缺失，因此未采用新版的`MOD13A1.061`数据。
+
+## 方法
+
+$$
+VI\_norm_{year,k} = \frac{VI_{year,k}-mean_{k}}{sd_{k}}
+$$
+
+其中，下标$year$代表年，$year∈[2000, 2022]$；下标$k$为第$k$个16天，$k∈[1, 23]$；$mean_k$和$sd_k$分别为2000-2021年中每年第$k$个16天的VI的均值和标准差。
+
+-   干旱的重现期
+
+| $VI\_norm{year,k}$ | 概率$P(x <= x_0)$ | 重现期$T = 1 / P(x <= x_0)$ |
+|--------------------|-------------------|-----------------------------|
+| 1.0                | `r cal_p(1.0)`    | `r cal_T(1.0)`              |
+| 0.5                | `r cal_p(0.5)`    | `r cal_T(0.5)`              |
+| 0.0                | `r cal_p(0.0)`    | `r cal_T(0.0)`              |
+| -0.5               | `r cal_p(-0.5)`   | `r cal_T(-0.5)`             |
+| -1.0               | `r cal_p(-1.0)`   | `r cal_T(-1.0)`             |
+| -1.5               | `r cal_p(-1.5)`   | `r cal_T(-1.5)`             |
+| -2.0               | `r cal_p(-2.0)`   | `r cal_T(-2.0)`             |
+
+You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change. This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
+
+# 结果
+
+```{r, echo=FALSE}
+ee_init()
+## global variables ------------------------------------------------------------
+bands <- c("NDVI", "EVI", "DayOfYear", "SummaryQA")
+col <- ee$ImageCollection("MODIS/006/MOD13A1")$
+  select(bands)$
+  filterDate("2000-01-01", "2022-12-31")
+
+col <- col_add_dn_date(col, include.year = FALSE, chunksize = 16)
+# ee_aggregate_array(col, "di")
+col_clim <- col$filterDate("2000-01-01", "2021-12-31")
+col_2022 <- col$filterDate("2022-01-01", "2022-12-31")
+
+init = 0
+# 根据doy进行aggregate，计算气候态均值
+get_climatology <- function() {
+  system.time(lst_mean <- ee_aggregate_list(col_clim, "di", "mean"))
+  system.time(lst_sd <- ee_aggregate_list(col_clim, "di", "stdDev"))
+  assign("lst_mean", lst_mean, .GlobalEnv)
+  assign("lst_sd", lst_sd, .GlobalEnv)
+}
+get_climatology()
+```
+
+```{r, echo=FALSE}
+get_NDVI_norm <- function(date, rm_cloud = TRUE) {
+  img_raw = col$filterMetadata("date", "equals", date)$first()
+  di = img_raw$get("di") %>% getInfo()
+
+  mean <- lst_mean[[di]]
+  sd <- lst_sd[[di]]
+  img_norm <- img_raw$select(0)$subtract(mean)$divide(sd)
+  if (rm_cloud) {
+    mask = img_raw$select("SummaryQA")$neq(3L)
+    img_norm = img_norm$updateMask(mask)
+  }
+  list(img_raw = img_raw, img_norm = img_norm)
+}
+
+draw_NDVI_norm <- function(img, delta = 1, title = "normalized NDVI") {
+  color <- rcolors$MPL_RdYlGn
+  vis_vi <- list(
+    bands = c("NDVI"), palette = color,
+    min = -delta, max = delta
+  )
+  # Map$centerObject(sf_prov$geometry, 7)
+  Map$setCenter(110, 35, 4)
+  Map$addLayer(img, vis_vi, title) +
+    Map$addLegend(vis_vi, name = "VI_norm") +
+    ee_draw_sf(sf_prov, "省界")
+}
+
+draw_VI_qc <- function(img) {
+  # Parameters for visualization
+  labels <- c("good", "marginal", "snow", "cloud")
+  cols <- c("#999999", "#00BFC4", "#F8766D", "#C77CFF")
+  vis_qc <- list(min = 0, max = 3, palette = cols, bands = "SummaryQA", values = labels)
+
+  # Create interactive map
+  m_qc <- Map$addLayer(img, vis_qc, "QC")
+  # continous palette
+  # Map$addLegend(vis_qc)
+  
+  # categorical palette
+  lgd = Map$addLegend(vis_qc, name = "QC", color_mapping = "discrete")
+  m_qc + lgd + 
+    ee_draw_sf(sf_prov, "省界")
+}
+
+sf_prov = ee$FeatureCollection("users/kongdd/shp/China/bou2_4p_ChinaProvince")
+ee_draw_sf <- function(shp, title = NULL, color = '000000', width=1.5) {
+  empty = ee$Image()$byte()
+  if (is.null(title)) title = shp$get("system:id") %>% getInfo() %>% basename()
+  # Paint all the polygon edges with the same number and width, display.
+  outline = empty$paint(featureCollection = shp, color = 1, width = width)
+  Map$addLayer(outline, list(palette = color), title)
+}
+```
+
+请选择想要查看的日期！
+
+```{r NDVI_norm, echo=FALSE}
+dates <- ee_systemtime(col_2022) %>% substr(1, 10)
+
+color <- rcolors$MPL_RdYlGn
+  delta = 1
+  vis_vi <- list(
+    bands = c("NDVI"), palette = color,
+    min = -delta, max = delta
+  )
+  
+selectInput("date",
+    label = "Date",
+    choices = dates, selected = dates[length(dates)]
+  )
+
+checkboxInput("rm_cloud", "Remove Cloud according to QC", TRUE)
+```
+
+Figure1. $NDVI\_norm$与$QC$空间分布
+
+```{r, echo=FALSE}
+# rmarkdown::render_delayed({
+  renderLeaflet({
+    # if (init == 0) {
+    #   get_climatology() # load 
+    #   init = 1
+    # }
+    eventReactive(c(input$date, input$rm_cloud), {
+      l = get_NDVI_norm(input$date, input$rm_cloud)      
+      m_vi = draw_NDVI_norm(l$img_norm)
+      m_qc = draw_VI_qc(l$img_raw)
+      m_vi | m_qc
+    }, ignoreNULL = FALSE)()
+  })  
+#})
+```
+
+## Try about `ui.`
+
+```{r, echo=FALSE}
+renderLeaflet({
+  eventReactive(c(input$date, input$rm_cloud), {
+    l = get_NDVI_norm(input$date, input$rm_cloud)      
+    m_vi = draw_NDVI_norm(l$img_norm)
+    m_qc = draw_VI_qc(l$img_raw)
+    combineWidgets(syncWith(m_vi, "one"), syncWith(m_qc, "one"))
+    # sync(m_vi, m_qc)
+  }, ignoreNULL = FALSE)()
+})  
+```
+
+```{r, echo=FALSE}
+renderLeaflet({
+  eventReactive(c(input$date, input$rm_cloud), {
+    l = get_NDVI_norm(input$date, input$rm_cloud)      
+    m_vi = draw_NDVI_norm(l$img_norm)
+    m_qc = draw_VI_qc(l$img_raw)
+    sync(m_vi, m_qc)
+  }, ignoreNULL = FALSE)()
+})  
+```
+
+# TODO
+
+-   [x] 添加中国省份信息；
+-   [ ] 被云污染的地方明显偏低，不适合指示干旱
+-   [ ] 测试reduceRegion功能，绘制时间序列图；
+
+# Reference
+
+1.  Zhang, Q., Xiao, M., Singh, V. P., & Li, J. (2012). Regionalization and spatial changing properties of droughts across the Pearl River basin, China. Journal of Hydrology, 472--473, 355--366. <https://doi.org/10.1016/j.jhydrol.2012.09.054>
+
+2.  [Interactive Shiny Documents](http://rmarkdown.rstudio.com/authoring_shiny.html)

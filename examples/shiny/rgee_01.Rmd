@@ -1,0 +1,66 @@
+---
+title: "hello"
+author: "Dongdong"
+date: "`r Sys.Date()`"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rgee)
+library(shiny)
+library(leaflet)
+
+ee_Initialize()
+```
+
+```{r}
+fluidPage(
+  actionButton("recalc", "Add SRTM Global Map"),
+  #p(),
+  leafletOutput("mymap")
+)
+
+renderLeaflet({
+  eventReactive(input$recalc, {
+    m = leafletProxy("map") 
+    m + Map$addLayer(ee$Image("srtm90_v4"), list(min = 0, max = 1000))
+  }, ignoreNULL = FALSE)()
+})
+# shinyApp(ui = ui, server = server)
+```
+
+```{r manipulateWidget, echo=TRUE}
+library(leaflet.minicharts)
+library(manipulateWidget)
+
+{
+  m1 <- Map$addLayer(eeObject = ee$Image("CGIAR/SRTM90_V4")) %>%
+    syncWith("one")
+
+  m2 <- Map$addLayer(
+    eeObject = ee$Image("CGIAR/SRTM90_V4"),
+    visParams = list(min=0,max=3000)
+  ) %>% syncWith("one")
+  m = combineWidgets(m1, m2)
+  m
+}
+```
+
+```{r sync, echo=TRUE}
+library(leafsync)
+
+# renderLeaflet
+{
+  m1 <- Map$addLayer(eeObject = ee$Image("CGIAR/SRTM90_V4"))
+
+  m2 <- Map$addLayer(
+    eeObject = ee$Image("CGIAR/SRTM90_V4"),
+    visParams = list(min=0,max=3000)
+  )
+  m = sync(m1, m2)
+  m
+}  
+```
