@@ -1,0 +1,77 @@
+# 1. gee_whittaker V2的前期准备
+
+> 在攻坚的路上，v20221119
+
+# 2. 处理预处理
+
+## 2.1. GEE端数据
+
+```{r}
+library(rgee)
+library(sf)
+library(sf2)
+library(dplyr)
+library(Ipaper)
+# library(missInfo)
+devtools::load_all()
+
+ee_Initialize()
+
+get_date_imgcol <- function(id) {
+  col = ee$ImageCollection(id)$
+    filterDate("2000-01-01", "2021-12-31")
+  dates <- ee_systemtime(col)
+  dates <- substr(dates, 1, 10) %>% as.Date()
+  dates
+}
+
+get_dateInfo <- function(dates) data.table(date = dates) %>% .[, .N, .(year(date))]
+
+id = "projects/gee-hydro/INPUT/MCD43A3_V060_Albedo_8day_raw"
+# id = "projects/gee-hydro/INPUT/MOD11A2_V061_Emiss_8day_gapfilled_v1"
+dates = get_date_imgcol(id)
+print(length(dates))
+get_dateInfo(dates) %>% print(n=40)
+```
+
+```{r}
+id = "MODIS/061/MOD15A2H"
+id = "NASA/GLDAS/V022/CLSM/G025/DA1D" # 滞后4月
+id = "NASA/GLDAS/V021/NOAH/G025/T3H"  # 实时更新，滞后2周
+id = "ECMWF/ERA5_LAND/HOURLY"         # 滞后4月
+
+col = ee$ImageCollection(id)$
+  filterDate("2022-01-01", "2022-12-31")
+dates = ee_systemtime(col) %>% substr(1, 10) %>% as.Date()
+dates
+```
+
+> 查看之前的缺测情况
+```{r}
+dates_full = get_date_MODIS()
+info = match2(dates, dates_full)
+dates_miss = dates_full[-info$I_y]
+data.table(date = dates_miss) %>% .[, .N, year(date)]
+```
+<!-- [data.table]: 
+# A tibble: 3 × 2
+   year     N    
+  <int> <int>    
+1  2001     2    
+2  2002     5    
+3  2016     1 -->
+
+```r
+c("2001-06-18", "2001-06-26", "2002-01-09", "2002-02-26", "2002-03-06", "2002-03-14", "2002-03-22", "2016-02-18")
+# 2001, 2002, 2016存在缺失
+```
+
+## 本地数据
+
+```{r}
+years = 2000:2021
+
+fs = dir2("Z:/MODIS/Terra_LAI_v061", "*.tif", recursive = TRUE)
+years = basename(fs) %>% str_extract("\\d{4}")
+table(years)
+```

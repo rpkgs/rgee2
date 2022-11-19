@@ -7,6 +7,7 @@
 \alias{ee_Initialize}
 \alias{ee}
 \alias{Map}
+\alias{make_date}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -15,6 +16,8 @@ below to see their documentation.
 
 \describe{
   \item{glue}{\code{\link[glue]{glue}}}
+
+  \item{lubridate}{\code{\link[lubridate:make_datetime]{make_date}}}
 
   \item{rgee}{\code{\link[rgee]{ee}}, \code{\link[rgee]{ee_Initialize}}, \code{\link[rgee]{Map}}}
 }}
