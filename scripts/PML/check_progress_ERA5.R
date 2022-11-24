@@ -9,7 +9,6 @@ suppressMessages({
 devtools::load_all("/mnt/i/Research/rpkgs/rgee2")
 # library(rfluxnet)
 # library(sf)
-# library(sf2)
 imgcol = ee$ImageCollection("projects/pml_evapotranspiration/PML/OUTPUT/PML_V2_8day_v017")
 imgcol = ee$ImageCollection("projects/pml_evapotranspiration/PML_INPUTS/GLDAS_V21_8day_V2")
 imgcol <- ee$ImageCollection("projects/gee-hydro/INPUT/EAR5L_8day")

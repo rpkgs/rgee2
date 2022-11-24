@@ -8,6 +8,7 @@
 \alias{ee}
 \alias{Map}
 \alias{make_date}
+\alias{mutate}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -15,6 +16,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
+  \item{dplyr}{\code{\link[dplyr]{mutate}}}
+
   \item{glue}{\code{\link[glue]{glue}}}
 
   \item{lubridate}{\code{\link[lubridate:make_datetime]{make_date}}}

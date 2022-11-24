@@ -3,7 +3,6 @@ ee_Initialize(drive = TRUE)
 devtools::load_all()
 # library(rfluxnet)
 # library(sf)
-# library(sf2)
 imgcol = ee$ImageCollection("projects/pml_evapotranspiration/PML/OUTPUT/PML_V2_8day_v017")
 imgcol = ee$ImageCollection("projects/pml_evapotranspiration/PML_INPUTS/GLDAS_V21_8day_V2")
 

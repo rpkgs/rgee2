@@ -1,6 +1,5 @@
 library(rgee)
 library(sf)
-library(sf2)
 library(dplyr)
 
 

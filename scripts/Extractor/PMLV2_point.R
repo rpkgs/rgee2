@@ -1,12 +1,11 @@
 library(rgee)
 library(rfluxnet)
 library(sf)
-library(sf2)
 
 ee_Initialize(drive = TRUE)
 
 df = read_xlsx2list("C:/Users/kongdd/Desktop/chinamete_soiltype.xlsx")[[1]] %>% data.table()
-sp <- df[, .(site, lon, lat)] %>% df2sp() %>% st_as_sf()
+sp <- df[, .(site, lon, lat)] %>% df2sf()
 
 imgcol = ee$ImageCollection("CAS/IGSNRR/PML/V2")
 # imgcol = ee$ImageCollection$Dataset$MODIS_006_MOD15A2H

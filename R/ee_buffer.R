@@ -7,30 +7,33 @@
 #'
 #' @examples
 #' \dontrun{
-#' st = st_212[, .(site, lon, lat, IGBP)]
+#' st <- st_212[, .(site, lon, lat, IGBP)]
 #' st_point_buffer_3by3(st, 500)
 #' }
-#' @import sf2
 #' @export
-st_point_buffer <- function(sp, scale = 500, half_win = 1){
-    st = as.data.table(sp)
-    cellsize = scale/500 * 1/240
+st_point_buffer <- function(sp, scale = 500, half_win = 1) {
+  st <- as.data.table(sp)
+  cellsize <- scale / 500 * 1 / 240
 
-    win = half_win*2 + 1
-    lon = seq(-half_win:half_win)*cellsize
-    lat = seq(-half_win:half_win)*cellsize    
-    adj_mat  = expand.grid(lon = lon, lat = lat)
-    
-    grps = 1:nrow(adj_mat) %>% set_names(., .)
-    df = lapply(grps, function(i) {
-        d = st
-        delta_x = adj_mat[i, 1] # lon
-        delta_y = adj_mat[i, 2]
-        d$lon %<>% add(delta_x)
-        d$lat %<>% add(delta_y)
-        d
-    }) %>% melt_list("group")
+  win <- half_win * 2 + 1
+  lon <- seq(-half_win:half_win) * cellsize
+  lat <- seq(-half_win:half_win) * cellsize
+  adj_mat <- expand.grid(lon = lon, lat = lat)
 
-    df %>% df2sp() %>%
-        st_as_sf()
+  grps <- 1:nrow(adj_mat) %>% set_names(., .)
+  df <- lapply(grps, function(i) {
+    d <- st
+    delta_x <- adj_mat[i, 1] # lon
+    delta_y <- adj_mat[i, 2]
+    d$lon %<>% add(delta_x)
+    d$lat %<>% add(delta_y)
+    d
+  }) %>% Ipaper::melt_list("group")
+
+  df %>% df2sf()
+}
+
+
+df2sf <- function(d, coords = c("lon", "lat"), crs = 4326) {
+  sf::st_as_sf(d, coords = coords, crs = crs)
 }

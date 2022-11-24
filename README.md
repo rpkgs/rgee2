@@ -4,9 +4,10 @@
 # rgee2
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/rpkgs/rgee2/workflows/R-CMD-check/badge.svg)](https://github.com/rpkgs/rgee2/actions)
+[![codecov](https://codecov.io/gh/rpkgs/rgee2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rpkgs/rgee2)
 <!-- badges: end -->
 
-The goal of rgee2 is to …
 
 ## Installation
 

@@ -1,11 +1,10 @@
 library(rgee)
 library(rfluxnet)
 library(sf)
-library(sf2)
 
 ee_Initialize(drive = TRUE)
 
-sp <- st_flux212[, .(site, lon, lat)] %>% df2sp() %>% st_as_sf()
+sp <- st_flux212[, .(site, lon, lat)] %>% df2sf()
 
 imgcol = ee$ImageCollection$Dataset$MODIS_006_MOD15A2H
 proj = ee_get_proj(imgcol)

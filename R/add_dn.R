@@ -56,13 +56,3 @@ dndate_start <- function(year, di, chunksize = 8) {
   ee$Date$parse("YYYYDDD", datestr)
 }
 
-
-#' @export
-get_date_dn <- function(date_begin = "2000-02-26", date_end = "2020-12-31", dn = 16) {
-  years <- seq(year(date_begin), year(date_end))
-  dates <- lapply(years, function(year) {
-    doy <- seq(1, 365, dn)
-    as.Date(sprintf("%d-%03d", year, doy), "%Y-%j")
-  }) %>% do.call(c, .)
-  dates[dates >= date_begin & dates <= date_end]
-}

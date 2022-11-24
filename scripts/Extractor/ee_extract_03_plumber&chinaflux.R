@@ -1,7 +1,6 @@
 library(rgee)
 library(rfluxnet)
 library(sf)
-library(sf2)
 library(glue)
 
 ee_Initialize(drive = TRUE)

@@ -1,3 +1,4 @@
+#' @importFrom magrittr %<>% %>% set_names add
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom stats setNames
 #' @importFrom utils download.file str
@@ -9,3 +10,13 @@
 ## usethis namespace: start
 ## usethis namespace: end
 NULL
+
+.onLoad <- function(libname, pkgname) {
+  if (getRversion() >= "2.15.1") {
+    utils::globalVariables(
+      c(
+        ".", ".SD", ".N", "..vars"
+      )
+    )
+  }
+}

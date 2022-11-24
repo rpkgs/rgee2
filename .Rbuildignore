@@ -9,3 +9,4 @@
 ^\.vscode$
 ^\.github$
 ^README\.Rmd$
+^rgee2\.Rproj$

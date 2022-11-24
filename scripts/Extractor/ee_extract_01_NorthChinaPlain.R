@@ -1,6 +1,5 @@
 library(rgee)
 library(sf)
-library(sf2)
 
 devtools::load_all()
 ee_Initialize(drive = TRUE)

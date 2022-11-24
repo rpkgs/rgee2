@@ -19,7 +19,7 @@ ee_point_buffer
 }
 \examples{
 \dontrun{
-st = st_212[, .(site, lon, lat, IGBP)]
+st <- st_212[, .(site, lon, lat, IGBP)]
 st_point_buffer_3by3(st, 500)
 }
 }

@@ -9,7 +9,6 @@
 ```{r}
 library(rgee)
 library(sf)
-library(sf2)
 library(dplyr)
 library(Ipaper)
 # library(missInfo)
@@ -28,7 +27,8 @@ get_date_imgcol <- function(id) {
 get_dateInfo <- function(dates) data.table(date = dates) %>% .[, .N, .(year(date))]
 
 id = "projects/gee-hydro/INPUT/MCD43A3_V060_Albedo_8day_raw"
-# id = "projects/gee-hydro/INPUT/MOD11A2_V061_Emiss_8day_gapfilled_v1"
+id = "projects/gee-hydro/INPUT/MOD11A2_V061_Emiss_8day_gapfilled_v1"
+id = "MODIS/061/MOD11A2"
 dates = get_date_imgcol(id)
 print(length(dates))
 get_dateInfo(dates) %>% print(n=40)

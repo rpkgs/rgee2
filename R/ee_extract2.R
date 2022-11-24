@@ -1,7 +1,7 @@
 #' ee_extract_clean
 #' 
 #' @author Song HeYang, Kong Dongdong
-#' @importFrom tidyr pivot_longer pivot_wider
+#' @importFrom tidyr pivot_longer pivot_wider matches
 #' @export 
 ee_extract_clean <- function(x) {
     if (is.character(x)) x = fread(x)

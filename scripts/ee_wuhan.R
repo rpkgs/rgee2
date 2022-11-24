@@ -2,11 +2,29 @@
 # ee_Initialize(drive = TRUE)
 library(raster)
 library(rgdal)
-library(sf2)
 library("rnaturalearth")
 library("rnaturalearthdata")
 library(gganimate)
 # library()
+
+# tag_facet <- function(p, open = "(", close = ")", tag_pool = letters, x = -Inf,
+#                       y = Inf, hjust = -0.5, vjust = 1.5, fontface = 2, family = "rTimes",
+#                       label = "label",
+#                       ...) {
+#   gb <- ggplot_build(p)
+#   lay <- gb$layout$layout
+#   # browser()
+#   tags <- cbind(lay, label = paste0(open, tag_pool[lay$PANEL], close), x = x, y = y)
+
+#   p + geom_label(
+#     data = tags, aes_string(x = "x", y = "y", label = label),
+#     ..., hjust = hjust, vjust = vjust, fontface = fontface,
+#     family = family, inherit.aes = FALSE
+#   ) + theme(
+#     strip.text = element_blank(),
+#     strip.background = element_blank()
+#   )
+# }
 
 files <- dir("/mnt/c/Users/kongdd/Google\ 云端硬盘/rgee", "ERA5_.*.tif", full.names = TRUE)
 

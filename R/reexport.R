@@ -15,3 +15,7 @@ rgee::Map
 #' @importFrom lubridate make_date
 #' @export
 lubridate::make_date
+
+#' @importFrom dplyr mutate
+#' @export
+dplyr::mutate

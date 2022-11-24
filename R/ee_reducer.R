@@ -1,6 +1,6 @@
 combineReducers <- function(reducers) {
     combine <- function(reducer, prev) reducer$combine(prev, NULL, TRUE)
-    reduce(reducers, combine)
+    Reduce(reducers, combine)
 }
 
 #' @export 

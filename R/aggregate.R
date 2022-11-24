@@ -31,14 +31,15 @@ ee_aggregate_list <- function(col, prop, reducerList = "mean", bandList = 0) {
   # grps <- unique(probs)
   grps = ee$Dictionary(col$aggregate_histogram(prop))$keys() %>% getInfo() %>% 
     set_names(., .)
-  
-  lst = foreach(key = grps, i = icount()) %do% {
+
+  lst = lapply(seq_along(grps), function(i) {
+    key = grps[i]
     .col = col$filterMetadata(prop, "equals", key)$sort("system:time_start")
     first = .col$first()
-    
+
     r = .col$select(bands)$reduce(reducer)
     ee_copyProperties(r, first)$rename(bandNames)
-  }
+  })
   lst
   # ee$ImageCollection$fromImages(lst)
 }

@@ -16,9 +16,10 @@ is cached in the path \code{~/.config/earthengine/}.}
 ee_init
 }
 \examples{
+\dontrun{
 # ee_Initialize(user = "cuijian426", drive = TRUE)
 ee_init()
-
+}
 }
 \seealso{
 \code{\link[rgee:ee_Initialize]{rgee::ee_Initialize()}}

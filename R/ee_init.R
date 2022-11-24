@@ -4,9 +4,10 @@
 #' @param ... others to [rgee::ee_Initialize()]
 #' 
 #' @examples 
+#' \dontrun{
 #' # ee_Initialize(user = "cuijian426", drive = TRUE)
 #' ee_init()
-#' 
+#' }
 #' @seealso [rgee::ee_Initialize()]
 #' @export 
 ee_init <- function(drive=FALSE, ...) {

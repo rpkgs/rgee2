@@ -1,6 +1,6 @@
 Package: rgee2
 Title: Extra functions for R Google Earth Engine
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person(given = "Dongdondg",
            family = "Kong",
@@ -13,13 +13,11 @@ Depends:
     R (>= 3.6)
 Imports: 
     rgee, 
-    tidyr, glue, 
+    dplyr, tidyr, glue, magrittr,
     data.table, 
     stringr, crayon, 
-    lubridate, 
-    sf2
+    lubridate
 Remotes:
-    rpkgs/sf2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

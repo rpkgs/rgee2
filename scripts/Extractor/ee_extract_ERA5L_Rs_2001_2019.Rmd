@@ -1,7 +1,6 @@
 ```{r}
 library(rgee)
 library(sf)
-library(sf2)
 library(dplyr)
 library(Ipaper)
 library(missInfo)
@@ -15,9 +14,7 @@ ee_Initialize()
 
 ```{r}
 ## 1. read tested points
-sp <- st_met2481[, .(site, lon, lat)] %>%
-    df2sp() %>%
-    st_as_sf()
+sp <- st_met2481[, .(site, lon, lat)] %>% df2sf()
 # sp <- read_sf('E:/rPML/data-raw/data_xieyx/st_met2481/st_met2481.shp') %>%
 #     dplyr::select(site)
 # sp %<>% mutate(ID = 1:nrow(.)) %>% select(ID, IGBPcode)
