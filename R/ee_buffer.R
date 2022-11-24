@@ -11,10 +11,10 @@
 #' st_point_buffer_3by3(st, 500)
 #' }
 #' @export
-st_point_buffer <- function(sp, scale = 500, half_win = 1) {
-  st <- as.data.table(sp)
+st_point_buffer <- function(st, scale = 500, half_win = 1) {
+  # st <- as.data.table(sp)
   cellsize <- scale / 500 * 1 / 240
-
+  
   win <- half_win * 2 + 1
   lon <- seq(-half_win:half_win) * cellsize
   lat <- seq(-half_win:half_win) * cellsize
@@ -33,7 +33,10 @@ st_point_buffer <- function(sp, scale = 500, half_win = 1) {
   df %>% df2sf()
 }
 
-
+#' df2sf
+#' @example R/examples/ex-df2sf.R
+#' @keywords internal
+#' @export 
 df2sf <- function(d, coords = c("lon", "lat"), crs = 4326) {
   sf::st_as_sf(d, coords = coords, crs = crs)
 }

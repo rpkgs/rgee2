@@ -4,15 +4,15 @@
 \alias{st_point_buffer}
 \title{ee_point_buffer}
 \usage{
-st_point_buffer(sp, scale = 500, half_win = 1)
+st_point_buffer(st, scale = 500, half_win = 1)
 }
 \arguments{
+\item{st}{data.table with the columns at least of \code{site}, \code{lon}, and \code{lat}.}
+
 \item{scale}{in the unit of \code{m}}
 
 \item{half_win}{half window of the buffer (in grids). window size equals to
 \code{2*halfwin + 1}.}
-
-\item{st}{data.table with the columns at least of \code{site}, \code{lon}, and \code{lat}.}
 }
 \description{
 ee_point_buffer

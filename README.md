@@ -19,67 +19,7 @@ You can install the development version of rgee2 from
 remotes::install_github("rpkgs/rgee2")
 ```
 
-
-## 网络代理
-
-clash需要开启系统代理(system)，否则Map$addLayer无法显示图像。
-
-- **1. conda create env**
-```powershell
-conda create --name qgis --channel conda-forge mamba
-mamba install geemap -c conda-forge
-```
-
-- **2. 安装gcloud**
-环境变量 -> 用户 -> 新建
-  + `https_proxy`: "http://127.0.0.1:1081"
-  + `https_proxy`: "http://127.0.0.1:1081"
-
-```R
-# gcloud info --run-diagnostics
-# C:/Users/kong/AppData/Roaming/gcloud/configurations/config_default
-[proxy]
-type = http
-address = localhost
-port = 1081
-```
-
-- **R语言设置**
-
-**The following solution not working. Because we need to set proxy before R start, other than after.**
-See <https://github.com/r-spatial/rgee/issues/73#issuecomment-1186549194> for details.
-
-```R
-Sys.setenv(https_proxy="http://127.0.0.1:1081")
-Sys.setenv(http_proxy="http://127.0.0.1:1081")
-```
-
-- ### 1. RStudio uses `R.exe`
-
-```bash
-#subl "C:/Program Files/R/R-4.2.1/etc/Rcmd_environ"
-http_proxy="http://127.0.0.1:1081"
-https_proxy="http://127.0.0.1:1081"
-```
-
-- ### 2. VScode uses `radian.exe`
-
-```javascript
-// code .vscode/settings.json
-{
-  "r.rterm.windows": "c:/ProgramData/Miniconda3/envs/gee/Scripts/radian.exe",
-  "terminal.integrated.env.windows": {
-    // "PATH": "${env:PATH}",
-    "http_proxy":"http://127.0.0.1:1081",
-    "https_proxy":"http://127.0.0.1:1081",
-  },
-}
-```
-
-```powershell
-[Environment]::SetEnvironmentVariable("http_proxy", "http://127.0.0.1:1081", [System.EnvironmentVariableTarget]::User)
-[Environment]::SetEnvironmentVariable("https_proxy", "http://127.0.0.1:1081", [System.EnvironmentVariableTarget]::User)
-```
+网络设置详见：[网络设置.md](doc/网络设置.md)
 
 ## Example
 

@@ -1,9 +1,6 @@
-# NOTE: This workflow is overkill for most R packages
-# check-standard.yaml is likely a better choice
+# https://github.com/r-lib/actions/blob/v2-branch/examples/check-standard.yaml
 # usethis::use_github_action("check-standard") will install it.
 
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
     branches: [main, master]
@@ -30,6 +27,7 @@ jobs:
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       R_KEEP_PKG_SOURCE: yes
 
     steps:
@@ -51,3 +49,4 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+          error-on: '"error"'

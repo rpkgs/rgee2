@@ -17,6 +17,8 @@ Imports:
     data.table, 
     stringr, crayon, 
     lubridate
+Suggests:
+    future, sf
 Remotes:
 Encoding: UTF-8
 LazyData: true
