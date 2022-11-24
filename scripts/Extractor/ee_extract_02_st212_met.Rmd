@@ -1,0 +1,35 @@
+> PMLV2的气象驱动
+
+```{r}
+library(rgee)
+library(rfluxnet)
+library(sf)
+library(Ipaper)
+
+ee_Initialize(drive = TRUE)
+```
+
+```{r}
+l_id <- list(
+  EAR5L = "projects/gee-hydro/INPUT/EAR5L_8day",
+  CFSV2 = "projects/gee-hydro/INPUT/CFSV2_8day",
+  GLDASv21 = "projects/gee-hydro/INPUT/GLDASv21_8day"
+)
+
+.tmp <- foreach(prefix = names(l_id), id = l_id, i = icount(2)) %do% {
+  col <- ee$ImageCollection(id)
+  col <- ee$ImageCollection(id)
+  st = st_flux212[, .(site, lon, lat)]
+  sp <- st %>% df2sf()
+
+  proj <- ee_get_proj(col)
+  cellsize = proj$transform[1]
+
+  # 数据量会比较大
+  ee_extract2(col,
+    sp,
+    via = "drive", lazy = TRUE, scale = 1000,
+    prefix = "st212_2000-2020_met_"
+  )
+}
+```

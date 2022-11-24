@@ -4,10 +4,10 @@
 \alias{st_point_buffer}
 \title{ee_point_buffer}
 \usage{
-st_point_buffer(st, scale = 500, half_win = 1)
+st_point_buffer(st, scale = 500, half_win = 1, cellsize = NULL)
 }
 \arguments{
-\item{st}{data.table with the columns at least of \code{site}, \code{lon}, and \code{lat}.}
+\item{st}{A data.frame with the columns at least of \code{site}, \code{lon}, and \code{lat}.}
 
 \item{scale}{in the unit of \code{m}}
 
