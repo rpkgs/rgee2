@@ -29,9 +29,15 @@ get_dateInfo <- function(dates) data.table(date = dates) %>% .[, .N, .(year(date
 id = "projects/gee-hydro/INPUT/MCD43A3_V060_Albedo_8day_raw"
 id = "projects/gee-hydro/INPUT/MOD11A2_V061_Emiss_8day_gapfilled_v1"
 id = "MODIS/061/MOD11A2"
+
+id = "projects/gee-hydro/INPUT/EAR5L_8day"
+id = "projects/gee-hydro/INPUT/GLDASv21_8day"
+id = "projects/gee-hydro/INPUT/CFSV2_8day"
+
 dates = get_date_imgcol(id)
 print(length(dates))
 get_dateInfo(dates) %>% print(n=40)
+
 ```
 
 ```{r}

@@ -1,6 +1,7 @@
 {
   // this parameter matters, otherwise `rgee` can not find package `earthengine-api`
-  "r.rterm.windows": "c:/ProgramData/Miniconda3/envs/rgee/Scripts/radian.exe",
+  // "r.rterm.windows": "c:/ProgramData/Miniconda3/envs/rgee/Scripts/radian.exe",
+  "r.rterm.windows": "c:/ProgramData/Miniconda3/envs/qgis/Scripts/radian.exe",
   "terminal.integrated.env.windows": {
     // "PATH": "${env:PATH}",
     "http_proxy":"http://127.0.0.1:1081",

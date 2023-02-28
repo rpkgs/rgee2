@@ -21,9 +21,10 @@ tidy_ERA5 <- function(img) {
     # q = ee$Image(pkg_ET$Tdew2q(Tdew, Pa))$rename('q'); # kg/kg
     Rn = img$select(c(
         'surface_net_solar_radiation_hourly', # note = Rns not Rn,
+        'surface_net_thermal_radiation_hourly', 
         'surface_solar_radiation_downwards_hourly',
         'surface_thermal_radiation_downwards_hourly'),
-        c('Rn', 'Rs', 'Rln'))$divide(3600); # J m-2 h-1 to W m-2
+        c('Rns', 'Rnl', 'Rs', 'Rl'))$divide(3600); # J m-2 h-1 to W m-2
 
     img_mm = img$select(bands_m)$multiply(1000 * 24)$ # m/h -> mm/d, hourly to daily
         rename(c('Prcp', 'R', 'ET', 'PET', 'Es', 'ET_water', 'Ei', 'Ec'));
@@ -36,10 +37,25 @@ tidy_ERA5 <- function(img) {
     ee$Image(ans)
 }
 
-aggregate_ERA5_daily <- function(date_begin, col, bands) {
+tidy_ERA5_Rn <- function(img) {
+  img_Rn = img$select(c(
+    'surface_net_solar_radiation_hourly', # note = Rns not Rn,
+    'surface_net_thermal_radiation_hourly', 
+    'surface_solar_radiation_downwards_hourly',
+    'surface_thermal_radiation_downwards_hourly'),
+    c('Rns', 'Rnl', 'Rs', 'Rl'))$divide(3600); # J m-2 h-1 to W m-2
+  
+  time_start = ee$Date(img$get('system:time_start'));
+  ans = img_Rn$
+    copyProperties(img, img$propertyNames())$
+    set('date', time_start$format('yyyy-MM-dd'));
+  ee$Image(ans)
+}
+
+aggregate_daily <- function(date_begin, col, bands) {
     date_begin = ee$Date(date_begin)
     date_end = date_begin$advance(1, "day")
-    imgcol = col$filterDate(date_begin, date_end)
+    imgcol = col$filterDate(date_begin, date_end) # 不包含最后一个日期
 
     ind = which(bands != "T") - 1
     img_first = imgcol$first() #%>% ee_properties()
@@ -51,5 +67,7 @@ aggregate_ERA5_daily <- function(date_begin, col, bands) {
         img = img$addBands(img_Tair)
     }
     img = ee$Image(img$copyProperties(img_first, img_first$propertyNames()))
-    img    
+    img
 }
+
+aggregate_ERA5_daily <- aggregate_daily

@@ -14,6 +14,8 @@ runtime: shiny
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+
 library(magrittr)
 library(shiny)
 library(leaflet)
@@ -92,13 +94,16 @@ get_climatology()
 ```
 
 ```{r, echo=FALSE}
-get_NDVI_norm <- function(date, rm_cloud = TRUE) {
+get_NDVI_norm <- function(date = "2022-08-13", rm_cloud = TRUE) {
   img_raw = col$filterMetadata("date", "equals", date)$first()
-  di = img_raw$get("di") %>% getInfo()
-
+  di = img_raw$get("di") %>% getInfo() %>% as.numeric()
+  print(di)
+  
   mean <- lst_mean[[di]]
   sd <- lst_sd[[di]]
   img_norm <- img_raw$select(0)$subtract(mean)$divide(sd)
+  print(rm_cloud)
+  
   if (rm_cloud) {
     mask = img_raw$select("SummaryQA")$neq(3L)
     img_norm = img_norm$updateMask(mask)

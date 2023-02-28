@@ -1,0 +1,54 @@
+```{r}
+library(rgee)
+ee_Initialize(drive = TRUE)
+
+library(sf)
+library(dplyr)
+library(Ipaper)
+library(tidymet)
+devtools::load_all()
+
+## 1. read tested points
+sp <- st_met2481[, .(site, lon, lat)] %>% df2sf()
+inds = chunk(1:nrow(sp), 10)
+
+sp_sm = sp[inds[[1]], ]
+```
+
+```{r}
+bands = c(
+  "surface_net_solar_radiation_sum", 
+  "surface_net_thermal_radiation_sum", 
+  "surface_solar_radiation_downwards_sum", 
+  "surface_thermal_radiation_downwards_sum"
+)
+bands_new <- c("Rns", "Rnl", "Rs", "Rl")
+
+col <- ee$ImageCollection("ECMWF/ERA5_LAND/DAILY_RAW")$
+  select(bands, bands_new)$
+  filter(ee$filter$Filter$calendarRange(2000, 2021, "year"))
+  # filter(ee$filter$Filter$calendarRange(month, month, "month"))$
+  # filter(ee$filter$Filter$calendarRange(day, day, "day_of_month"))
+```
+
+```{r, eval=FALSE}
+main <- function(sp) {
+  # years = rev(2001:2019)
+  years <- rev(2000:2021)
+  temp <- foreach(year = years, i = icount()) %do% {
+    runningId(i)
+
+    col <- ee$ImageCollection("ECMWF/ERA5_LAND/DAILY_RAW")$
+      filter(ee$filter$Filter$calendarRange(year, year, "year"))$
+      select(bands)
+
+    tmp <- ee_extract2(col,
+      sp,
+      via = "drive", lazy = TRUE, scale = 10e3, # 10km
+      # sp, via = "getInfo", lazy = FALSE, scale = 10e3,#10km
+      outfile = glue("st2481_ERA5L_Radiation_{year}.csv")
+    )
+  }
+}
+main(sp)
+```
