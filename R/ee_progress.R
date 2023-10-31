@@ -1,5 +1,5 @@
 #' @export
-get_date_dn <- function(date_begin = "2000-02-26", date_end = "2020-12-31", dn = 16) {
+get_date_dn <- function(date_begin = "2000-02-26", date_end = "2022-12-31", dn = 16) {
     years <- seq(year(date_begin), year(date_end))
     dates <- lapply(years, function(year) {
         doy <- seq(1, 365, dn)

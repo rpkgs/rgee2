@@ -22,7 +22,7 @@ ee_extract2(
 must take a single numeric value as an argument and return a single value.
 See details.}
 
-\item{scale}{A nominal scale in meters of the Image projection to work in.
+\item{scale}{A nominal scale given in meters of the Image projection to work in.
 By default 1000.}
 
 \item{lazy}{Logical. If TRUE, a \code{\link[future:sequential]{

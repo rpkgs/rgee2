@@ -22,6 +22,6 @@ below to see their documentation.
 
   \item{lubridate}{\code{\link[lubridate:make_datetime]{make_date}}}
 
-  \item{rgee}{\code{\link[rgee]{Map}}, \code{\link[rgee]{ee}}, \code{\link[rgee]{ee_Initialize}}}
+  \item{rgee}{\code{\link[rgee]{ee}}, \code{\link[rgee]{ee_Initialize}}, \code{\link[rgee]{Map}}}
 }}
 

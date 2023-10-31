@@ -1,0 +1,74 @@
+# 1. gee_whittaker V2的前期准备
+
+> 在攻坚的路上，v20221119
+
+# 2. 处理预处理
+
+## 2.1. GEE端数据
+
+```{r}
+library(rgee)
+library(sf)
+library(dplyr)
+library(Ipaper)
+# library(missInfo)
+setwd("X:/rpkgs/rgee2.R")
+devtools::load_all()
+
+# ee_Initialize()
+ee_init()
+
+get_date_imgcol <- function(id) {
+  col = ee$ImageCollection(id)$
+    filterDate("2000-01-01", "2022-12-31")
+  dates <- ee_systemtime(col)
+  dates <- substr(dates, 1, 10) %>% as.Date()
+  dates
+}
+
+get_dateInfo <- function(dates) data.table(date = dates) %>% .[, .N, .(year(date))]
+id = "MODIS/061/MOD15A2H"
+
+dates = get_date_imgcol(id)
+print(length(dates))
+info = get_dateInfo(dates)  
+print(info, n=40)
+# 有4景缺失
+# "2001-06-18" "2001-06-26" "2016-02-18" "2022-10-16"
+```
+
+```{r}
+sp = read_sf("data-raw/shp/st_1e3_mask_tidy.shp") %>% select(site)
+
+# sp
+col_all = ee$ImageCollection("MODIS/061/MOD15A2H")$select(c("Lai_500m", "FparExtra_QC"))
+col_all
+```
+
+## 下载数据
+
+```{r}
+.tmp = foreach(year = 2001:2022, i = icount()) %do% {
+  runningId(i)
+  filter = ee$filter$Filter$calendarRange(year, year, "year")
+  col = col_all$filter(filter)
+  
+  tmp <- ee_extract2(col, sp,
+    via = "drive", lazy = TRUE, scale = 500, # 10km
+    # sp, via = "getInfo", lazy = FALSE, scale = 10e3,#10km
+    outfile = glue("LAIv061_Terra_1e3sp_{year}.csv")
+  )
+}
+
+```
+
+```{r}
+img = col$first()
+tmp <- ee_extract2(col, sp,
+    via = "drive", lazy = FALSE, scale = 500, # 10km
+    # sp, via = "getInfo", lazy = FALSE, scale = 10e3,#10km
+    outfile = glue("LAIv061_Terra_1e3sp_temp.csv")
+  )
+```
+
+## 数据准备好之后，进行Whittaker绘图

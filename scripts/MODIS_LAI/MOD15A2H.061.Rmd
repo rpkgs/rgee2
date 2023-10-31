@@ -14,11 +14,12 @@ library(Ipaper)
 # library(missInfo)
 devtools::load_all()
 
-ee_Initialize()
+# ee_Initialize()
+ee_init()
 
 get_date_imgcol <- function(id) {
   col = ee$ImageCollection(id)$
-    filterDate("2000-01-01", "2021-12-31")
+    filterDate("2000-01-01", "2022-12-31")
   dates <- ee_systemtime(col)
   dates <- substr(dates, 1, 10) %>% as.Date()
   dates
@@ -29,7 +30,6 @@ get_dateInfo <- function(dates) data.table(date = dates) %>% .[, .N, .(year(date
 id = "projects/gee-hydro/INPUT/MCD43A3_V060_Albedo_8day_raw"
 id = "projects/gee-hydro/INPUT/MOD11A2_V061_Emiss_8day_gapfilled_v1"
 id = "MODIS/061/MOD11A2"
-
 id = "projects/gee-hydro/INPUT/EAR5L_8day"
 id = "projects/gee-hydro/INPUT/GLDASv21_8day"
 id = "projects/gee-hydro/INPUT/CFSV2_8day"
@@ -37,7 +37,10 @@ id = "MODIS/061/MOD15A2H"
 
 dates = get_date_imgcol(id)
 print(length(dates))
-get_dateInfo(dates) %>% print(n=40)
+info = get_dateInfo(dates)  
+print(info, n=40)
+# 有4景缺失
+# "2001-06-18" "2001-06-26" "2016-02-18" "2022-10-16"
 ```
 
 ```{r}
@@ -54,7 +57,8 @@ dates
 
 > 查看之前的缺测情况
 ```{r}
-dates_full = get_date_MODIS()
+dates_full = get_date_dn(dn = 8)
+
 info = match2(dates, dates_full)
 dates_miss = dates_full[-info$I_y]
 data.table(date = dates_miss) %>% .[, .N, year(date)]
