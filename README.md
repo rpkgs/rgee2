@@ -8,6 +8,9 @@
 [![codecov](https://codecov.io/gh/rpkgs/rgee2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rpkgs/rgee2)
 <!-- badges: end -->
 
+- `conda install earthengine-api=0.1.370`
+- `rgee: 0.1.7`
+
 
 ## Installation
 

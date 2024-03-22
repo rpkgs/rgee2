@@ -1,6 +1,7 @@
 # 1. gee_whittaker V2的前期准备
 
 > 在攻坚的路上，v20221119
+> 我又来了，v20231105
 
 # 2. 处理预处理
 
@@ -12,13 +13,12 @@ library(sf)
 library(dplyr)
 library(Ipaper)
 # library(missInfo)
-devtools::load_all()
-
-ee_Initialize()
+# devtools::load_all()
+ee_Init()
 
 get_date_imgcol <- function(id) {
   col = ee$ImageCollection(id)$
-    filterDate("2000-01-01", "2021-12-31")
+    filterDate("2000-01-01", "2022-12-31")
   dates <- ee_systemtime(col)
   dates <- substr(dates, 1, 10) %>% as.Date()
   dates
@@ -30,10 +30,10 @@ id = "projects/gee-hydro/INPUT/MCD43A3_V060_Albedo_8day_raw"
 id = "projects/gee-hydro/INPUT/MOD11A2_V061_Emiss_8day_gapfilled_v1"
 id = "MODIS/061/MOD11A2"
 
-id = "projects/gee-hydro/INPUT/EAR5L_8day"
 id = "projects/gee-hydro/INPUT/GLDASv21_8day"
-id = "projects/gee-hydro/INPUT/CFSV2_8day"
-id = "MODIS/061/MOD15A2H"
+# id = "projects/gee-hydro/INPUT/CFSV2_8day"
+# id = "projects/gee-hydro/INPUT/EAR5L_8day"
+# id = "MODIS/061/MOD15A2H"
 
 dates = get_date_imgcol(id)
 print(length(dates))
@@ -44,10 +44,10 @@ get_dateInfo(dates) %>% print(n=40)
 id = "MODIS/061/MOD15A2H"
 id = "NASA/GLDAS/V022/CLSM/G025/DA1D" # 滞后4月
 id = "NASA/GLDAS/V021/NOAH/G025/T3H"  # 实时更新，滞后2周
-id = "ECMWF/ERA5_LAND/HOURLY"         # 滞后4月
+id = "ECMWF/ERA5_LAND/HOURLY"         # 滞后7天
 
 col = ee$ImageCollection(id)$
-  filterDate("2022-01-01", "2022-12-31")
+  filterDate("2023-01-01", "2023-12-31")
 dates = ee_systemtime(col) %>% substr(1, 10) %>% as.Date()
 dates
 ```

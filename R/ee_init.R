@@ -10,7 +10,7 @@
 #' }
 #' @seealso [rgee::ee_Initialize()]
 #' @export 
-ee_init <- function(drive=FALSE, ...) {
+ee_Init <- function(drive=FALSE, ...) {
   tryCatch({
     ee$Image(1)
     invisible()
@@ -19,3 +19,6 @@ ee_init <- function(drive=FALSE, ...) {
     # message(sprintf('%s', e$message))
   })
 }
+
+#' @export
+ee_init = ee_Init

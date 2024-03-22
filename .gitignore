@@ -17,3 +17,5 @@ data-raw
 # examples/
 *.nc
 libs
+*.vdoc.r
+*.csv

@@ -1,0 +1,198 @@
+> GEE限制变多: no more than 5000 bands
+
+```{r}
+library(rgee)
+library(rfluxnet)
+library(sf)
+library(sf2)
+ee_Initialize(drive = TRUE)
+```
+
+```{r}
+st = st_flux212[, .(site, lon, lat)]
+sp <- df2sf(st)
+
+imgcol = ee$ImageCollection$Dataset$MODIS_061_MOD15A2H
+proj = ee_get_proj(imgcol)
+scale = proj$scale # scale should lte prj.scale
+# scale = 463.3127
+
+sp_2 = st_point_buffer(st, scale = scale, half_win = 1) # -half_win: half_win
+sp_5 = st_point_buffer(st, scale = scale, half_win = 2)
+```
+
+```{r}
+col <- ee$ImageCollection("MODIS/061/MCD12Q1")$select(0)
+ee_extract2(col, 
+  sp_2,
+  via = "drive", lazy = TRUE,
+  prefix = "st212_LC-win3_2000-2023_"
+)
+
+ee_extract2(col,
+  sp_5,
+  via = "drive", lazy = TRUE,
+  prefix = "st212_LC-win5_2000-2023_"
+)
+```
+
+
+## 清洗LC
+```{r}
+f <- "C:/Users/hydro/Downloads/st212_LC-win5_2000-2023_MODIS_061_MCD12Q1.csv"
+d <- fread(f)
+
+library(tidyr)
+library(lubridate)
+
+dat <- cbind(
+  as.data.table(sp_5)[, .(group, site)],
+  select(d, -1, -`.geo`, -ee_ID)
+) |>
+  pivot_longer(
+    cols = -c(group, site),
+    names_to = "date",
+    names_transform = list(date = \(x) as_date(substr(x, 1, 10))),
+    values_to = "LC"
+  ) |>
+  mutate(LC = as.integer(LC)) |>
+  data.table()
+
+fwrite(dat, "st212_LC-win5_2000-2023_MODIS_061_MCD12Q1.csv")
+## 统计占优的比例
+
+major_lc <- function(LC) {
+  tbl <- table(LC) |> as.data.table() %>%
+    .[order(-N)] |> mutate(perc = N/sum(N) * 100, LC = as.integer(LC)) %>%
+    cbind(order = 1:nrow(.), .) %>%
+    .[perc > 2]
+  
+  if (nrow(tbl) > 3) tbl = tbl[1:3, ]
+  tbl
+  # major <- tbl[which.max(N), lc] |> as.integer()
+  # n_major <- tbl[which.max(N), N]
+  # perc <- n_major / sum(tbl$N) * 100
+  # data.table(major, n_major, perc)
+}
+
+info <- dat[, major_lc(LC), site] |>
+  merge(rename(IGBP_006, LC = code)) |> 
+  arrange(site, order)
+
+l = list(
+  name = dcast(info, site ~ order, value.var = "name"), 
+  perc = dcast(info, site ~ order, value.var = "perc")
+)
+
+write_list2xlsx(l, "st212_IGBP_major_2000-2023.xlsx")
+```
+
+
+
+
+> 需要收集逐日的数据
+
+```{r}
+col <- ee$ImageCollection("MODIS/061/MCD43A3")$select("Albedo_WSA_shortwave")
+ee_extract2(col, sp,
+  via = "drive", lazy = TRUE,
+  prefix = "st212_albedo_2000-2023_"
+)
+
+ee_extract2(ee$ImageCollection$Dataset$MODIS_061_MOD11A2,
+  sp,
+  via = "drive", lazy = TRUE,
+  prefix = "st212_Tland_2000-2023_"
+)
+```
+
+
+```{r}
+# Emiss和Albedo数据量太大，单独处理
+col = ee$ImageCollection("projects/pml_evapotranspiration/PML_INPUTS/MODIS/Albedo_interp_8d_v3_061")
+
+ee_extract2(col, sp,
+  via = "drive", lazy = TRUE,
+  outfile = "st212_Albedo_8D_V061_2000-2023_"
+)
+
+col = ee$ImageCollection("projects/pml_evapotranspiration/PML_INPUTS/MODIS/Emiss_interp_8d")
+ee_extract2(col, sp,
+  via = "drive", lazy = TRUE,
+  # prefix = "st212_emiss_2000-2023_", 
+  outfile = "st212_Emiss_8D_v061_2000-2023.csv"
+)
+
+```
+
+
+```{r}
+# save(df, file = "data-raw/phenofit_NorthChinaPlain_test-(2015-2021)_3by3.rda")
+
+## ALL the scale is 500m
+## 1. vegetation index
+col <- ee$ImageCollection$Dataset$MODIS_061_MOD15A2H$
+  select(c("Lai_500m", "FparExtra_QC"))
+ee_extract2(col, sp,
+  via = "drive", lazy = TRUE,
+  prefix = "st212_2000-2023_"
+)
+
+col <- ee$ImageCollection$Dataset$MODIS_061_MCD15A3H$
+  select(c("Lai", "FparExtra_QC"))
+ee_extract2(col,
+  sp_2,
+  via = "drive", lazy = TRUE,
+  prefix = "st212_LAI_2000-2023_"
+)
+
+col = ee$ImageCollection$Dataset$MODIS_061_MOD13A1$
+  select(c("NDVI", "EVI", "DayOfYear", "SummaryQA"))
+ee_extract2(col, sp_2, via = "drive", lazy = TRUE,
+            prefix = "st212_EVI_2000-2023_")
+
+col = ee$ImageCollection$Dataset$MODIS_061_MOD13A2$
+  select(c("NDVI", "EVI", "DayOfYear", "SummaryQA"))
+ee_extract2(col, sp_2, via = "drive", lazy = TRUE,
+            prefix = "st212_EVI_2000-2023_")
+
+# ee_extract2( ee$ImageCollection$Dataset$MODIS_061_MOD09GA,
+#             sp_2, via = "drive", lazy = TRUE, scale = scale,
+#             prefix = "st212_SR_MOD09GA_2000-2023_")
+
+
+## MODIS 061 ET and GPP, begins from 2021
+# id <- "MODIS/061/MOD16A2"
+# col <- ee$ImageCollection(id)$select(c("ET"))
+# ee_extract2(col, sp_2,
+#   via = "drive", lazy = TRUE,
+#   prefix = "st212_ET-mod_2000-2023_"
+# )
+
+# col <- ee$ImageCollection$Dataset$MODIS_006_MOD17A2H
+# id <- "MODIS/061/MOD17A2H"
+# col <- ee$ImageCollection(id)$select(c("GPP"))
+# ee_extract2(col, sp_2,
+#   via = "drive", lazy = TRUE,
+#   prefix = "st212_GPP-mod_2000-2023_"
+# )
+
+## 1km scale dataset
+# Emissivity
+# scale_1km = ee_get_proj(ee$ImageCollection$Dataset$MODIS_061_MOD11A2)$scale
+# sp2_1km = st_point_buffer(sp, scale = scale_1km, half_win = 1)```
+
+```{r}
+# drive_csv_clean(file, sp2_1km)
+# drive_csv_clean(file, sp_2)
+
+files <- dir("data-raw/st212/raw", full.names = TRUE)
+overwrite = FALSE
+for (infile in files) {
+    print(infile)
+    drive_csv_clean(infile, sp_2)
+}
+
+file = "C:/Users/kongdd/Google 云端硬盘/rgee_backup/st212_2000-2023_ith06_MODIS_061_MOD15A2H.csv"
+file = "C:/Users/kongdd/Google 云端硬盘/rgee_backup/st212_2000-2023_MODIS_061_MCD12Q1.csv"
+```

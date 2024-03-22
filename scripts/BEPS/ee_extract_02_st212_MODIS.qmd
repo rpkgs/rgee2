@@ -1,0 +1,66 @@
+> GEE限制变多: no more than 5000 bands
+
+```{r}
+library(rgee)
+library(rgee2)
+library(rfluxnet)
+library(sf)
+library(sf2)
+library(Ipaper)
+ee_Initialize(drive = TRUE)
+```
+
+```{r}
+# st = st_flux212[1:10, .(site, lon, lat)]
+# st = data.frame(site='CUG', lon = 114.61, lat = 30.4595)
+st = data.frame(site=57493, lon = 114.3197, lat = 30.35)
+sp <- df2sf(st)
+
+imgcol = ee$ImageCollection$Dataset$MODIS_061_MOD15A2H
+proj = ee_get_proj(imgcol)
+scale = proj$scale # scale should lte prj.scale
+# scale = 463.3127
+
+# sp_2 = st_point_buffer(st, scale = scale, half_win = 1) # -half_win: half_win
+# sp_5 = st_point_buffer(st, scale = scale, half_win = 2)
+```
+
+```{r}
+# col <- ee$ImageCollection("MODIS/061/MCD12Q1")$select(0)
+# df = ee_extract(col, sp, via = "getInfo", lazy = FALSE, scale = 500)
+# df
+# rfluxnet::IGBP_006
+
+images = list(
+  CI = "users/kongdd/BEPS/CI_240X_1Y_V1",
+  soil_type = "OpenLandMap/SOL/SOL_TEXTURE-CLASS_USDA-TT_M/v02",
+  soil_water = "OpenLandMap/SOL/SOL_WATERCONTENT-33KPA_USDA-4B1C_M/v01", 
+  soil_buld = "OpenLandMap/SOL/SOL_BULKDENS-FINEEARTH_USDA-4A1H_M/v02", 
+  soil_pH = "OpenLandMap/SOL/SOL_PH-H2O_USDA-4C1A2A_M/v02", 
+  soil_clay = "OpenLandMap/SOL/SOL_CLAY-WFRACTION_USDA-3A1A1A_M/v02", 
+  soil_sand = "OpenLandMap/SOL/SOL_SAND-WFRACTION_USDA-3A1A1A_M/v02"
+)
+
+# d = ee_extract(images$CI, sp, via = "getInfo", lazy = FALSE, scale = 500)
+ee_extract_images <- function(sp) {
+  lst = foreach(img = images, i = icount()) %do% {
+    img = ee$Image(img)
+    ee_extract(img, sp, via = "getInfo", lazy = FALSE, scale = 500)
+  }
+}
+
+CI = lst[[1]]
+lst[2:length(lst)] |> melt_list("varname") |> 
+  relocate(b30, b60, .after = "b10")
+
+# CI
+# Soil type
+# Soil water content at 33kPa (field capacity) 
+# img = ee$Image(images$soil_type)
+df = ee_extract_images(sp)
+
+
+```
+
+<https://developers.google.com/earth-engine/datasets/catalog/OpenLandMap_SOL_SOL_WATERCONTENT-33KPA_USDA-4B1C_M_v01>
+
