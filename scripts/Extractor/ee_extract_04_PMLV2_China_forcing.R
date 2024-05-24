@@ -1,18 +1,19 @@
 library(rgee)
 library(sf)
 library(dplyr)
-
-
+library(tidymet)
+library(sf2)
 
 devtools::load_all()
 # ee_Initialize(user = "kongdd.sysu", drive = TRUE)
-ee_Initialize(user = "cuijian426", drive = TRUE)
+# ee_Initialize(user = "cuijian426", drive = TRUE)
 # ee_Initialize(user = "kjding93", drive = TRUE)
-# ee_Initialize(drive = TRUE)
+ee_Initialize(drive = TRUE)
 
 ## 1. read tested points
-sp <- read_sf(path.mnt("C:/Users/kongdd/Desktop/学生研究/谢宇轩研究-planB/st_met2481.shp")) %>%
-    dplyr::select(site)
+sp = st_met2481 |> df2sp() |> select(site)
+# sp <- read_sf(path.mnt("C:/Users/kongdd/Desktop/学生研究/谢宇轩研究-planB/st_met2481.shp")) %>%
+#     dplyr::select(site)
 # sp %<>% mutate(ID = 1:nrow(.)) %>% select(ID, IGBPcode)
 
 ## 2. clip ERA5L data by `rgee`

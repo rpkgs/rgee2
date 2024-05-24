@@ -4,7 +4,7 @@
 \alias{st_point_buffer}
 \title{ee_point_buffer}
 \usage{
-st_point_buffer(st, scale = 500, half_win = 1, cellsize = NULL)
+st_point_buffer(st, scale = 463.3127, half_win = 1, cellsize = NULL)
 }
 \arguments{
 \item{st}{A data.frame with the columns at least of \code{site}, \code{lon}, and \code{lat}.}

@@ -7,7 +7,8 @@ library(rfluxnet)
 library(sf)
 library(sf2)
 library(Ipaper)
-ee_Initialize(drive = TRUE)
+# ee_Initialize(drive = TRUE)
+ee_init()
 ```
 
 ```{r}
@@ -21,8 +22,16 @@ proj = ee_get_proj(imgcol)
 scale = proj$scale # scale should lte prj.scale
 # scale = 463.3127
 
+col = ee$ImageCollection("MODIS/061/MOD15A2H")$select(c("Lai_500m"))
 # sp_2 = st_point_buffer(st, scale = scale, half_win = 1) # -half_win: half_win
 # sp_5 = st_point_buffer(st, scale = scale, half_win = 2)
+```
+
+```{r}
+# col <- ee$ImageCollection("MODIS/061/MCD12Q1")$select(0)
+system.time({
+  df = ee_extract(col, sp, via = "getInfo", lazy = FALSE, scale = 450)
+})
 ```
 
 ```{r}
