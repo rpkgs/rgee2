@@ -22,7 +22,9 @@ You can install the development version of rgee2 from
 remotes::install_github("rpkgs/rgee2")
 ```
 
-网络设置详见：[网络设置.md](doc/网络设置.md)
+- Python环境配置见：[Installation](./Installation.md)
+
+- 网络设置详见：[网络设置.md](doc/网络设置.md)
 
 ## Example
 
