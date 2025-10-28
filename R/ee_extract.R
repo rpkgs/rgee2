@@ -40,7 +40,7 @@
     fun_name <- gsub("Reducer.", "", (ee$Reducer$getInfo(fun))[["type"]])
     x_ic <- rgee:::bands_to_image_collection(x)
     create_tripplets <- function(img) {
-        img_reduce_regions <- ee$Image$reduceRegions(image = img,
+        img_reduce_regions <- ee$Image$reduceRegions(img,
             collection = ee_y, reducer = fun, scale = scale, ...)
         ee$FeatureCollection$map(img_reduce_regions, function(f) {
             ee$Feature$set(f, "imageId", ee$Image$get(img, "system:index"))
