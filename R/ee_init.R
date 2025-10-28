@@ -1,6 +1,5 @@
 #' ee_init
 #' 
-#' @inheritParams rgee::ee_Initialize
 #' @param drive ignored
 #' @param ... others to [rgee::ee_Initialize()]
 #' 

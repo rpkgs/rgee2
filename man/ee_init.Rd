@@ -7,8 +7,7 @@
 ee_Init(drive = FALSE, ...)
 }
 \arguments{
-\item{drive}{Logical (optional). If set to TRUE, the drive credential will be
-cached in the path \code{~/.config/earthengine/}.}
+\item{drive}{ignored}
 
 \item{...}{others to \code{\link[rgee:ee_Initialize]{rgee::ee_Initialize()}}}
 }
