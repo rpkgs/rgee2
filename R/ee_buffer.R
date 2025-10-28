@@ -32,7 +32,6 @@ st_point_buffer <- function(
     d$lat %<>% add(delta_y)
     d
   }) %>% Ipaper::melt_list("group")
-
   df %>% df2sf()
 }
 

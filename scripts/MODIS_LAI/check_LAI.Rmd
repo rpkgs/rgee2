@@ -24,7 +24,8 @@ get_date_imgcol <- function(id) {
   dates
 }
 
-get_dateInfo <- function(dates) data.table(date = dates) %>% .[, .N, .(year(date))]
+get_dateInfo <- function(dates) data.table(date = dates) %>% 
+  .[, .N, .(year(date))]
 
 id = "projects/gee-hydro/INPUT/MCD43A3_V060_Albedo_8day_raw"
 id = "projects/gee-hydro/INPUT/MOD11A2_V061_Emiss_8day_gapfilled_v1"

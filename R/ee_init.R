@@ -1,6 +1,7 @@
 #' ee_init
 #' 
 #' @inheritParams rgee::ee_Initialize
+#' @param drive ignored
 #' @param ... others to [rgee::ee_Initialize()]
 #' 
 #' @examples 
@@ -15,7 +16,8 @@ ee_Init <- function(drive=FALSE, ...) {
     ee$Image(1)
     invisible()
   }, error = function(e) {
-    rgee::ee_Initialize(drive=drive, ...)
+    # rgee::ee_Initialize(drive=drive, ...)
+    ee$Initialize(...)
     # message(sprintf('%s', e$message))
   })
 }

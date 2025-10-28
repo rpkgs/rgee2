@@ -20,7 +20,7 @@ ee_init()
 
 get_date_imgcol <- function(id) {
   col = ee$ImageCollection(id)$
-    filterDate("2000-01-01", "2022-12-31")
+    filterDate("2000-01-01", "2024-12-31")
   dates <- ee_systemtime(col)
   dates <- substr(dates, 1, 10) %>% as.Date()
   dates
@@ -48,18 +48,17 @@ col_all
 ## 下载数据
 
 ```{r}
-.tmp = foreach(year = 2001:2022, i = icount()) %do% {
+.tmp = foreach(year = 2001:2024, i = icount()) %do% {
   runningId(i)
   filter = ee$filter$Filter$calendarRange(year, year, "year")
   col = col_all$filter(filter)
-  
+
   tmp <- ee_extract2(col, sp,
     via = "drive", lazy = TRUE, scale = 500, # 10km
     # sp, via = "getInfo", lazy = FALSE, scale = 10e3,#10km
     outfile = glue("LAIv061_Terra_1e3sp_{year}.csv")
   )
 }
-
 ```
 
 ```{r}
