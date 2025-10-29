@@ -5,10 +5,10 @@ import json
 import google.oauth2.credentials
 
 
-def auto_Initialize():
+def auto_Initialize(token):
     # with open("token.json", "r") as f:
     #     stored = json.load(f)
-    stored = json.loads(os.getenv("EARTHENGINE_TOKEN"))
+    stored = json.loads(token)
 
     credentials = google.oauth2.credentials.Credentials(
         None,

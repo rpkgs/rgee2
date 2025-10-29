@@ -54,6 +54,13 @@ jobs:
           extra-packages: any::covr, any::xml2
           needs: coverage
       
+      - name: setup r-reticulate
+        shell: Rscript {0}
+        run: | 
+          python = Sys.which("python")
+          writeLines(sprintf("RETICULATE_PYTHON=%s", python), Sys.getenv("GITHUB_ENV"))
+          reticulate::py_config()
+      
       - name: Test coverage
         run: |
           cov <- covr::package_coverage(
