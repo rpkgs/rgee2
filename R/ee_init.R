@@ -21,10 +21,16 @@ ee_Init <- function(drive=FALSE, ...) {
   })
 }
 
-ci_auth <- function() {
+#' @export
+ee_auth_ci <- function() {
   ci_auth <- system.file("python/ci_auth.py", package = "rgee2")
   reticulate::source_python(ci_auth)
   auto_Initialize()
+}
+
+#' @export
+use_backend <- function() {
+  reticulate::py_require("earthengine-api", pip = TRUE)
 }
 
 #' @export
