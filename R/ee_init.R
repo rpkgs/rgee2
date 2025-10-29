@@ -21,5 +21,11 @@ ee_Init <- function(drive=FALSE, ...) {
   })
 }
 
+ci_auth <- function() {
+  ci_auth <- system.file("python/ci_auth.py", package = "rgee2")
+  reticulate::source_python(ci_auth)
+  auto_Initialize()
+}
+
 #' @export
 ee_init = ee_Init

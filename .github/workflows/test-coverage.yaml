@@ -1,10 +1,10 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+  workflow_run:
+    workflows: ["CI"]  # setup_ee.yml 的 name 字段
+    types:
+      - completed
 
 name: test-coverage
 
@@ -12,9 +12,11 @@ permissions: read-all
 
 jobs:
   test-coverage:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      EARTHENGINE_TOKEN: ${{ secrets.EARTHENGINE_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +40,7 @@ jobs:
           covr::to_cobertura(cov)
         shell: Rscript {0}
 
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}
           file: ./cobertura.xml

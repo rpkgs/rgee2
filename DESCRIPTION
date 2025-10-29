@@ -16,11 +16,15 @@ Imports:
     dplyr, tidyr, glue, magrittr,
     data.table, 
     stringr, crayon, 
-    lubridate
+    lubridate, 
+    reticulate
 Suggests:
-    future, sf
+    future,
+    sf,
+    testthat (>= 3.0.0)
 Remotes:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Config/testthat/edition: 3
