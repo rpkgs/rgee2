@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         config:
           - {os: ubuntu-latest,   r: 'release'}
@@ -61,6 +61,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          install-quarto: 'false'
           cache: true              # 默认启用，设为 false 禁用
           cache-version: 1         # 修改此数字强制刷新缓存
           extra-packages: any::covr, any::xml2
