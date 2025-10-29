@@ -19,7 +19,6 @@ Imports:
     lubridate, 
     reticulate
 Suggests:
-    future,
     sf,
     testthat (>= 3.0.0)
 Remotes:

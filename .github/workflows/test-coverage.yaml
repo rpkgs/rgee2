@@ -59,7 +59,7 @@ jobs:
         run: | 
           python = Sys.which("python")
           writeLines(sprintf("RETICULATE_PYTHON=%s", python), Sys.getenv("GITHUB_ENV"))
-          reticulate::py_config()
+          print(reticulate::py_config())
       
       - name: Test coverage
         run: |
